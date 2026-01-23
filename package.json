@@ -1,0 +1,66 @@
+{
+  "name": "vmix-bible-link",
+  "version": "0.0.0",
+  "main": "build/main.js",
+  "scripts": {
+    "ng": "ng",
+    "angular-start": "ng serve",
+    "electron-start": "npm run electron-build && electron ./build/main.js --dev --no-sandbox",
+    "angular-build": "ng build --base-href",
+    "electron-build": "tsc --project tsconfig.electron.json",
+    "electron-package": "npm run angular-build && npm run electron-build && npx electron-builder --publish never"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "packageManager": "npm@10.9.2",
+  "dependencies": {
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "@fortawesome/angular-fontawesome": "^4.0.0",
+    "@fortawesome/fontawesome-svg-core": "^7.2.0",
+    "@fortawesome/free-solid-svg-icons": "^7.2.0",
+    "electron-store": "^11.0.2",
+    "jsdom": "^27.1.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.1.1",
+    "@angular/cli": "^21.1.1",
+    "@angular/compiler-cli": "^21.1.0",
+    "@types/jsdom": "^27.0.0",
+    "electron": "^40.0.0",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8"
+  },
+  "build": {
+    "appId": "vmix-bible-link",
+    "productName": "VMIX Bible Link",
+    "publisherName": "andrewjrvs",
+    "artifactName": "vmix-bible-link.${ext}",
+    "icon": "icon.png",
+    "files": [
+      "build/"
+    ],
+    "win": {
+      "target": "portable",
+      "forceCodeSigning": false,
+      "icon": "icon.png"
+    }
+  }
+}
