@@ -1,0 +1,150 @@
+$base-background-color: #ffcb00;
+$base-gradient-start: #ffe99e;
+$base-font-color: #140000;
+
+%titlebar {
+    display: inline-flex;
+    height: var(--t-h, 25px);
+    max-height: var(--t-h, 25px);
+    background-color: gray; /* Or a color with some opacity */
+    -webkit-app-region: drag; /* Makes the title bar area draggable */
+    background: var(--t-bc, $base-background-color);
+    background: linear-gradient(180deg, var(--t-bc-g-s, $base-gradient-start) 0%, var(--t-bc, $base-background-color) 100%);
+    color: var(--t-c, $base-font-color);
+    position: relative;
+    gap: 15px;
+    justify-content: space-between;
+    padding: 0 5px;
+    align-items: center;
+    z-index: 9000;
+    margin: 0;
+    box-sizing: border-box;
+
+    > span{
+        font-size: var(--t-f-s, 12px);
+        font-weight: var(--t-f-w, 700);
+        font: var(--t-f);
+    }
+
+    button, a {
+        -webkit-app-region: no-drag;
+    }
+}
+
+%titlebar-close {
+    all: unset;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #b68d00;
+    text-indent: -9999px;
+    cursor: pointer;
+    padding: 0;
+    box-sizing: border-box;
+    background: linear-gradient(135deg, #fffcf5 0%, #ffcb00 100%);
+
+    &:active {
+        background: linear-gradient(215deg, #fffcf5 0%, #ffcb00 100%);
+    }
+
+}
+
+%titlebar-toggle {
+    all: unset;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    box-sizing: border-box;
+
+    svg {
+        position: relative;
+        top: -1px;
+        pointer-events: none;
+
+        rect {
+            stroke: #b68d00;
+            stroke-width: 1;
+        }
+        .start-stop {
+            stop-color: #fffcf5;
+        }
+        .end-stop {
+            stop-color: #ffcb00;
+        }
+    }
+    &:active {
+        svg {
+            .start-stop {
+                stop-color: #ffcb00;
+            }
+            .end-stop {
+                stop-color: #fffcf5;
+            }
+        }
+    }
+}
+
+
+%window-body-wrapper {
+   display: block;
+   background: #e0e0e0;
+   padding: 5px;
+   margin: 0;
+   box-shadow: 2px 2px 10px #140000;
+   position: relative;
+   z-index: 100;
+}
+%window-body {
+    border: 1px solid black;
+    background: white;
+    display: block;
+    height: calc(100vh - 25px - 10px); /* Adjust height to fit within the window */
+    box-sizing: border-box;
+    padding: 10px;
+    overflow: hidden;
+}
+
+%window-spilt {
+    display: block;
+    position: relative;
+    background: #e0e0e0;
+    height: 5px;
+    margin-left: -22px;
+    margin-right: -22px;
+    &::before,
+    &::after {
+        position: absolute;
+        display: block;
+        content: " ";
+        height: 1px;
+        background-color: black;
+        left: 2px;
+        right: 2px;
+    }
+
+    &::before {
+        top: 0;
+    }
+    &::after {
+        bottom: 0;
+    }
+}
+
+@mixin body {
+    @extend %window-body-wrapper;
+    > main {
+        @extend %window-body;
+    }
+}
+
+@mixin titlebar {
+    @extend %titlebar;
+}
+@mixin titlebar-close {
+    @extend %titlebar-close;
+}
+@mixin titlebar-toggle {
+    @extend %titlebar-toggle;
+}
+@mixin split-rule {
+    @extend %window-spilt;
+}

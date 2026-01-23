@@ -1,13 +1,17 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Window } from "./framework/window/window";
 
 @Component({
   selector: 'jar-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, Window],
   template: `
-    <h1>Hello, {{ title() }}</h1>
-
-    <router-outlet />
+    <jar-window>
+      <span title>{{title()}}</span>
+      <div body>
+        <router-outlet></router-outlet>
+      </div>
+    </jar-window>
   `,
   styles: [],
 })

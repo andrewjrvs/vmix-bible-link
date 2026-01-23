@@ -1,12 +1,14 @@
 {
   "name": "vmix-bible-link",
   "version": "0.0.0",
+  "main": "build/main.js",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "angular-start": "ng serve",
+    "electron-start": "npm run electron-build && electron ./build/main.js --dev --no-sandbox",
+    "angular-build": "ng build --base-href",
+    "electron-build": "tsc --project tsconfig.electron.json",
+    "electron-package": "npm run angular-build && npm run electron-build && npx electron-builder --publish never"
   },
   "prettier": {
     "printWidth": 100,
@@ -36,8 +38,16 @@
     "@angular/build": "^21.1.1",
     "@angular/cli": "^21.1.1",
     "@angular/compiler-cli": "^21.1.0",
+    "electron": "^40.0.0",
     "jsdom": "^27.1.0",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
+  },
+  "build": {
+    "appId": "vmix-bible-link",
+    "productName": "VMIX Bible Link",
+    "files": [
+      "build/"
+    ]
   }
 }
