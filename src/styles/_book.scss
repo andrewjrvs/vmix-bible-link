@@ -1,0 +1,72 @@
+
+%book {
+    color: var(--book-c);
+    font: var(--book-f, serif);
+    // background: var(--book-bg-base);
+    
+    background: linear-gradient(90deg, var(--book-bg-white) 0%, var(--book-bg-base) 20%,  var(--book-bg-base) 90%, var(--book-bg-dark) 100%);
+    font-size: .9em;
+    font-weight: 700;
+    box-sizing: border-box;
+    position: relative;
+    padding-inline: 3px;
+    border-top-right-radius: 100% 5px;
+    border-top-left-radius:  100% 5px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    width: 25px;
+    transform-origin: bottom center;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+
+    cursor: pointer;
+
+    //perspective: -1000px;
+    > span {
+        user-select: none;
+        writing-mode: vertical-rl;
+    }
+}
+
+
+@mixin object($bg: var(--book-c-ovr, purple), $color: white) {
+    --book-bg-base: #{$bg};
+    --book-bg-dark: color-mix(in srgb, var(--book-bg-base), black 30%);
+    --book-bg-white: color-mix(in srgb, var(--book-bg-base), white 30%);
+    --book-c: #{$color};
+    @extend %book;
+
+    &::before, &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 4%;
+        right: 4%;
+        height: 4%;
+        background: linear-gradient(180deg, #00000005 0%, #00000050 10%,  #00000050 90%, #00000070 100%);
+
+        border-right: 1px solid #ffffff50;
+        border-top-left-radius: 100% 5px;
+        border-top-right-radius: 100% 5px;
+    }
+    &::before {
+        top: 12%;
+    }
+    &::after {
+        bottom: 8%;
+    }
+
+    &:hover {
+        //transform: rotateX(20deg);
+        transform: rotate3d(1, 0, 0, 15deg);
+        // border-top: 2px solid #ffffff80;
+        box-shadow: 0px -3px 2px rgba(50, 50, 50, 0.75);
+    }
+    &:active {
+        //transform: rotateX(20deg);
+        transform: rotate3d(1, 0, 0, 25deg);
+        // border-top: 2px solid white;
+        box-shadow: 0px -9px 5px rgba(50, 50, 50, 0.75);
+    }
+    
+}

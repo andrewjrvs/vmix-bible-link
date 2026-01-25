@@ -21,9 +21,12 @@ $base-font-color: #140000;
     box-sizing: border-box;
 
     > span{
+        overflow-x: hidden;
+        display: block;
         font-size: var(--t-f-s, 12px);
         font-weight: var(--t-f-w, 700);
         font: var(--t-f);
+        white-space: nowrap;
     }
 
     button, a {

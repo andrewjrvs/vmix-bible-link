@@ -2,25 +2,29 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const utility_1 = require("./utility");
+const crypto_1 = require("crypto");
 let mainWindow;
 let updateWindow;
 function createWindow() {
-    mainWindow = new electron_1.BrowserWindow({
+    const windowKey = (0, crypto_1.randomUUID)();
+    const rtnWindow = new electron_1.BrowserWindow({
         height: 600,
         width: 800,
         frame: false, // Hides the native title bar and frame
         transparent: true, // Makes the window background transparent    
         icon: (0, utility_1.getAssetUrl)('favicon.ico'),
         webPreferences: {
-            preload: (0, utility_1.resolveElectronPath)('preload.js')
+            preload: (0, utility_1.resolveElectronPath)('preload.js'),
+            additionalArguments: [`--window-id=${windowKey}`]
         }
     });
-    mainWindow.removeMenu();
+    rtnWindow.removeMenu();
     const route = (0, utility_1.getAppUrl)();
-    mainWindow.loadURL(route);
-    mainWindow.on('closed', () => {
-        mainWindow.destroy();
+    rtnWindow.loadURL(route);
+    rtnWindow.on('closed', () => {
+        rtnWindow.destroy();
     });
+    return rtnWindow;
 }
 // function createUpdateWindow() {
 //   updateWindow = new BrowserWindow({
@@ -41,7 +45,7 @@ function createWindow() {
 //   });
 // }
 electron_1.app.on('ready', () => {
-    createWindow();
+    mainWindow = createWindow();
     //createUpdateWindow()
 });
 electron_1.app.on('window-all-closed', () => {
@@ -57,4 +61,24 @@ electron_1.app.on('activate', () => {
 // Listen for events with ipcMain.handle
 electron_1.ipcMain.handle('sayHello', (event, param) => {
     return "Hello " + param;
+});
+electron_1.ipcMain.handle('closeWindow', (event, windowId) => {
+    if (mainWindow) {
+        mainWindow.close();
+    }
+});
+electron_1.ipcMain.handle('toggleMaximizeWindow', (event, windowId) => {
+    if (mainWindow) {
+        if (mainWindow.isMaximized()) {
+            mainWindow.unmaximize();
+        }
+        else {
+            mainWindow.maximize();
+        }
+    }
+});
+electron_1.ipcMain.handle('toggleDevTools', (event, windowId) => {
+    if (mainWindow) {
+        mainWindow.webContents.toggleDevTools();
+    }
 });

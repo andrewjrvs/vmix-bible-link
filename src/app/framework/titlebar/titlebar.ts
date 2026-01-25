@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 
 @Component({
   selector: 'jar-titlebar',
   imports: [],
   template: `
-    <button class="close-button">X</button>
+    <button class="close-button" (click)="close.emit($event)" title="Close">X</button>
     <span><ng-content></ng-content></span>
-    <button class="toggle-button">
+    <button class="toggle-button" (click)="toggle.emit($event)" title="Toggle Window Size">
         <svg width="16px" height="16px" viewBox="0 0 16 16" stroke-width=".5">
               <defs>
                     <linearGradient id="grad" x1="0%" x2="100%" y1="0%" y2="100%">
@@ -43,7 +43,9 @@ import { Component } from '@angular/core';
         @include window.titlebar-toggle();
     }
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Titlebar {
-
+  public close = output<{altKey: boolean}>();
+  public toggle = output<{altKey: boolean}>();
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'jar-body',
@@ -11,7 +11,8 @@ import { Component } from '@angular/core';
     :host {
       @include window.body();
     }
-  `,  
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Body {
 
