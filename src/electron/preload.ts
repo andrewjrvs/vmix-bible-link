@@ -11,5 +11,17 @@ contextBridge.exposeInMainWorld('api', {
     closeWindow: () => ipcRenderer.invoke('closeWindow', windowId),
     toggleWindow: () => ipcRenderer.invoke('toggleMaximizeWindow', windowId),
     toggleDevTools: () => ipcRenderer.invoke('toggleDevTools', windowId),
+    // Bible API
+    uploadBible: (bibleJson: any) => ipcRenderer.invoke('uploadBible', bibleJson),
+    isBibleLoaded: () => ipcRenderer.invoke('isBibleLoaded'),
+    getBooks: () => ipcRenderer.invoke('getBooks'),
+    clearBible: () => ipcRenderer.invoke('clearBible'),
+    getChapterCount: (bookName: string) => ipcRenderer.invoke('getChapterCount', bookName),
+    getChapterVerses: (bookName: string, chapter: number) => ipcRenderer.invoke('getChapterVerses', bookName, chapter),
+    openVerseWindow: (bookName: string, chapter: number, selectedVerses: number[]) => ipcRenderer.invoke('openVerseWindow', bookName, chapter, selectedVerses),
+    sendVerseSelection: (bookName: string, chapter: number, verses: any[]) => ipcRenderer.invoke('sendVerseSelection', bookName, chapter, verses),
+    onVerseSelection: (callback: (data: any) => void) => {
+        ipcRenderer.on('verse-selection', (_event, data) => callback(data));
+    }
 } as Api);
 

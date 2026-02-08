@@ -10,4 +10,16 @@ electron_1.contextBridge.exposeInMainWorld('api', {
     closeWindow: () => electron_1.ipcRenderer.invoke('closeWindow', windowId),
     toggleWindow: () => electron_1.ipcRenderer.invoke('toggleMaximizeWindow', windowId),
     toggleDevTools: () => electron_1.ipcRenderer.invoke('toggleDevTools', windowId),
+    // Bible API
+    uploadBible: (bibleJson) => electron_1.ipcRenderer.invoke('uploadBible', bibleJson),
+    isBibleLoaded: () => electron_1.ipcRenderer.invoke('isBibleLoaded'),
+    getBooks: () => electron_1.ipcRenderer.invoke('getBooks'),
+    clearBible: () => electron_1.ipcRenderer.invoke('clearBible'),
+    getChapterCount: (bookName) => electron_1.ipcRenderer.invoke('getChapterCount', bookName),
+    getChapterVerses: (bookName, chapter) => electron_1.ipcRenderer.invoke('getChapterVerses', bookName, chapter),
+    openVerseWindow: (bookName, chapter, selectedVerses) => electron_1.ipcRenderer.invoke('openVerseWindow', bookName, chapter, selectedVerses),
+    sendVerseSelection: (bookName, chapter, verses) => electron_1.ipcRenderer.invoke('sendVerseSelection', bookName, chapter, verses),
+    onVerseSelection: (callback) => {
+        electron_1.ipcRenderer.on('verse-selection', (_event, data) => callback(data));
+    }
 });

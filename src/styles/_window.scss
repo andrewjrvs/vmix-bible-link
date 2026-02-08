@@ -103,7 +103,7 @@ $base-font-color: #140000;
     height: calc(100vh - 25px - 10px); /* Adjust height to fit within the window */
     box-sizing: border-box;
     padding: 10px;
-    overflow: hidden;
+    overflow: scroll;
 }
 %window-nav {
     height: var(--w-n-h);
