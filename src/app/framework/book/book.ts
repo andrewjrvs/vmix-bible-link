@@ -19,9 +19,9 @@ import { BookOverview } from '../../models/overview';
   host: {
     '[title]': 'book().name',
     'attr.tabindex': '0',
-    '[style.--book-c-ovr]': 'book().testament === "Old" ? "#013500" : null',
+    '[style.--book-c-ovr]': 'book().testament === "Old" ? "#a75a00" : null',
   },
-  changeDetection:  ChangeDetectionStrategy.OnPush
+  changeDetection:  ChangeDetectionStrategy.OnPush, 
 })
 export class Book {
   public book = input.required<BookOverview>();

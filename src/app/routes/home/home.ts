@@ -1,17 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SplitRule } from '../../framework/split-rule/split-rule';
-import { Shelf } from "../../framework/shelf/shelf";
 import { BOOKS } from '../../BOOKS';
 
 @Component({
   selector: 'jar-home',
-  imports: [SplitRule, Shelf],
+  imports: [],
   template: `
-    <jar-shelf [books]="books"></jar-shelf>
-    <jar-split-rule></jar-split-rule>
-
     <h2>
-      home works!
+      home works too!
     </h2>
   `,
   styles: ``,
