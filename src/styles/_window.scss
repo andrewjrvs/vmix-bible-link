@@ -97,7 +97,7 @@ $base-font-color: #140000;
    z-index: 100;
 }
 %window-body {
-    border: 1px solid black;
+    border: 3px inset #cccccc;
     background: white;
     display: block;
     height: calc(100vh - 25px - 10px); /* Adjust height to fit within the window */
@@ -121,15 +121,17 @@ $base-font-color: #140000;
 
             > button {
                 all: unset;
+                cursor: pointer;
                 display: flex;
                 flex-direction: column;
                 gap: 2px;
                 align-items: center;
-                box-sizing: border-box;
-                height: calc(var(--w-n-h) - 25px);
-                width: calc(var(--w-n-h) - 25px);
-                top: -10px;
+                box-sizing: content-box;
+                // height: calc(var(--w-n-h) - 25px);
+                width: calc(var(--w-n-h) - 30px);
+                top: -3px;
                 position: relative;
+                padding-inline: 4px;
 
                 > span {
                     font-size: 10px;
@@ -142,6 +144,11 @@ $base-font-color: #140000;
                     > span {
                         outline-width: 0;
                     }
+                }
+
+                &.selected {
+                    outline: 3px inset #cccccc;
+                    outline-offset: 3px;
                 }
             }
         }
@@ -179,7 +186,7 @@ $base-font-color: #140000;
 }
 
 @mixin body {
-    --w-n-h: 60px;
+    --w-n-h: 65px;
     @extend %window-body-wrapper;
     > nav {
         @extend %window-nav;

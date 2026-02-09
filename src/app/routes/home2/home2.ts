@@ -14,7 +14,7 @@ interface ExpandedBook extends BookInfo {
 }
 
 @Component({
-  selector: 'jar-home',
+  selector: 'jar-home2',
   imports: [CommonModule, RouterModule],
   template: `
     <div class="container">
@@ -599,7 +599,7 @@ interface ExpandedBook extends BookInfo {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Home {
+export class Home2 {
   private api = inject(Api);
 
   protected bibleLoaded = signal(false);
