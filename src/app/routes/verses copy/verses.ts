@@ -13,8 +13,20 @@ interface VerseDisplay extends VerseInfo {
   selector: 'jar-verses',
   imports: [CommonModule],
   template: `
-    <h1>{{ bookName() | titlecase }} {{ chapterNumber() }}</h1>
     <div class="window-container">
+      <!-- BeOS-style Title Bar -->
+      <div class="titlebar">
+        <span class="titlebar-text">{{ bookName() }} {{ chapterNumber() }}</span>
+        <div class="titlebar-actions">
+          @if (userSelectedVerses().size > 0) {
+            <button class="confirm-btn beos-btn" (click)="confirmSelection()">
+              Confirm Selection ({{ userSelectedVerses().size }})
+            </button>
+          }
+          <button class="close-btn beos-btn" (click)="closeWindow()">✕</button>
+        </div>
+      </div>
+
       <!-- Book Content -->
       <div class="book-container">
         @if (loading()) {
@@ -24,12 +36,68 @@ interface VerseDisplay extends VerseInfo {
         } @else {
           <!-- Book Layout: 2 pages side by side, 2 columns each -->
           <div class="book-spread">
-            @for (verse of verses(); track verse.verse) {
-              <div id="verse-{{verse.verse}}" class="verse-item {{ verse.isSelected ? 'highlighted' : '' }} {{ verse.isUserSelected ? 'user-selected' : '' }}" (click)="toggleVerseSelection(verse)">
-                <div class="verse-number">{{ verse.verse }}</div>
-                <div class="verse-text">{{ verse.text }}</div>
+            <!-- Left Page -->
+            <div class="page left-page">
+              <div class="page-columns">
+                <div class="column">
+                  @for (verse of leftPageColumn1(); track verse.verse) {
+                    <div class="verse-item"
+                         [class.highlighted]="verse.isSelected"
+                         [class.user-selected]="verse.isUserSelected"
+                         [id]="'verse-' + verse.verse"
+                         (click)="toggleVerseSelection(verse)">
+                      <span class="verse-number">{{ verse.verse }}</span>
+                      <span class="verse-text">{{ verse.text }}</span>
+                    </div>
+                  }
+                </div>
+                <div class="column">
+                  @for (verse of leftPageColumn2(); track verse.verse) {
+                    <div class="verse-item"
+                         [class.highlighted]="verse.isSelected"
+                         [class.user-selected]="verse.isUserSelected"
+                         [id]="'verse-' + verse.verse"
+                         (click)="toggleVerseSelection(verse)">
+                      <span class="verse-number">{{ verse.verse }}</span>
+                      <span class="verse-text">{{ verse.text }}</span>
+                    </div>
+                  }
+                </div>
               </div>
-            } 
+            </div>
+
+            <!-- Spine/Gutter -->
+            <div class="spine"></div>
+
+            <!-- Right Page -->
+            <div class="page right-page">
+              <div class="page-columns">
+                <div class="column">
+                  @for (verse of rightPageColumn1(); track verse.verse) {
+                    <div class="verse-item"
+                         [class.highlighted]="verse.isSelected"
+                         [class.user-selected]="verse.isUserSelected"
+                         [id]="'verse-' + verse.verse"
+                         (click)="toggleVerseSelection(verse)">
+                      <span class="verse-number">{{ verse.verse }}</span>
+                      <span class="verse-text">{{ verse.text }}</span>
+                    </div>
+                  }
+                </div>
+                <div class="column">
+                  @for (verse of rightPageColumn2(); track verse.verse) {
+                    <div class="verse-item"
+                         [class.highlighted]="verse.isSelected"
+                         [class.user-selected]="verse.isUserSelected"
+                         [id]="'verse-' + verse.verse"
+                         (click)="toggleVerseSelection(verse)">
+                      <span class="verse-number">{{ verse.verse }}</span>
+                      <span class="verse-text">{{ verse.text }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
           </div>
         }
       </div>
@@ -38,9 +106,8 @@ interface VerseDisplay extends VerseInfo {
   styles: `
     :host {
       display: block;
-      padding: 30px;
-      margin: -10px;
-      background: #f5f5dc; /* Aged paper color */
+      height: 100vh;
+      background: #d9d9d9;
     }
 
     .window-container {
@@ -125,6 +192,8 @@ interface VerseDisplay extends VerseInfo {
     .book-container {
       flex: 1;
       overflow: auto;
+      padding: 20px;
+      background: #f5f5dc; /* Aged paper color */
     }
 
     .loading, .error {
@@ -140,13 +209,49 @@ interface VerseDisplay extends VerseInfo {
 
     /* Book Spread Layout */
     .book-spread {
+      display: flex;
       max-width: 1400px;
       margin: 0 auto;
+      gap: 0;
       background: #fff;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       min-height: 100%;
-      padding: 0 2px 0 0;
-      column-count: 3;
+    }
+
+    .page {
+      flex: 1;
+      padding: 30px 20px;
+      background: linear-gradient(to bottom, #fefefe 0%, #f8f8f0 100%);
+    }
+
+    .left-page {
+      border-right: none;
+    }
+
+    .right-page {
+      border-left: none;
+    }
+
+    /* Spine between pages */
+    .spine {
+      width: 4px;
+      background: linear-gradient(to right, #ccc 0%, #999 50%, #ccc 100%);
+      box-shadow: inset 0 0 3px rgba(0,0,0,0.4);
+      flex-shrink: 0;
+    }
+
+    /* Page Columns */
+    .page-columns {
+      display: flex;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     /* Verse Styles */

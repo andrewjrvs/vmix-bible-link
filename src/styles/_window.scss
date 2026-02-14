@@ -1,13 +1,14 @@
 $base-background-color: #ffcb00;
 $base-gradient-start: #ffe99e;
 $base-font-color: #140000;
+$base-titlebar-height: var(--t-h, 30px);
 
 %titlebar {
     border: 3px outset var(--t-bc, $base-background-color);
     border-bottom: 2px solid var(--t-bc, $base-background-color);
     display: inline-flex;
-    height: var(--t-h, 25px);
-    max-height: var(--t-h, 25px);
+    height: $base-titlebar-height;
+    max-height: $base-titlebar-height;
     background-color: gray; /* Or a color with some opacity */
     -webkit-app-region: drag; /* Makes the title bar area draggable */
     background: var(--t-bc, $base-background-color);
@@ -106,7 +107,7 @@ $base-font-color: #140000;
     border: 3px inset #cccccc;
     background: white;
     display: block;
-    height: calc(100vh - 25px - 10px - 3px); /* Adjust height to fit within the window */
+    height: calc(100vh - $base-titlebar-height - 10px - 3px); /* Adjust height to fit within the window */
     box-sizing: border-box;
     padding: 10px;
     overflow-y: scroll;
@@ -203,7 +204,7 @@ $base-font-color: #140000;
     }
 
     > nav + main {
-        height: calc(100vh - 25px - 10px - var(--w-n-h) - 3px);
+        height: calc(100vh - $base-titlebar-height - 10px - var(--w-n-h) - 3px);
     }
 }
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Api } from '../../services/api';
 import { BookInfo, VerseInfo, SelectedVerseData } from '../../../electron/api';
 
@@ -215,6 +215,7 @@ interface ExpandedBook extends BookInfo {
 })
 export class Home {
   private api = inject(Api);
+  private router = inject(Router);
 
   protected bibleLoaded = signal(false);
   protected uploading = signal(false);
@@ -324,6 +325,13 @@ export class Home {
     // Trigger change detection
     this.oldTestamentExpanded.set([...this.oldTestamentExpanded()]);
     this.newTestamentExpanded.set([...this.newTestamentExpanded()]);
+    
+    this.router.navigate(['/verses'], {
+      queryParams: {
+        book: book.name,
+        chapter: chapter
+      }
+    });
   }
 
   onCloseVerseModal(book: ExpandedBook) {

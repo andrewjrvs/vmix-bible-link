@@ -146,7 +146,7 @@ export class BibleService {
     if (!this.bibleData || !this.bibleData.books) {
       return null;
     }
-    return this.bibleData.books.find(book => book.name === bookName);
+    return this.bibleData.books.find(book => book.name.toLowerCase() === bookName.toLowerCase());
   }
 
   /**
