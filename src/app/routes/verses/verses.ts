@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faFloppyDisk, faPaperPlane, faDisplay, faBroom, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { Api } from '../../services/api';
-import { VerseInfo } from '../../../electron/api';
+import { VerseInfo, VmixState } from '../../../electron/api';
 
 interface VerseDisplay extends VerseInfo {
   isSelected: boolean;
@@ -11,7 +13,8 @@ interface VerseDisplay extends VerseInfo {
 
 @Component({
   selector: 'jar-verses',
-  imports: [CommonModule],
+  imports: [CommonModule, FontAwesomeModule],
+  host: { '[class.has-selection]': 'userSelectedVerses().size > 0' },
   template: `
     <h1>{{ bookName() | titlecase }} {{ chapterNumber() }}</h1>
     <div class="window-container">
@@ -34,6 +37,31 @@ interface VerseDisplay extends VerseInfo {
         }
       </div>
     </div>
+
+    @if (userSelectedVerses().size > 0) {
+      <div class="action-bar">
+        <span class="verse-ref">{{ formattedReference() }}</span>
+        @if (vmixState(); as state) {
+          <span class="vmix-status" [class]="'vmix-status vmix-' + state.inputStatus" [title]="state.inputName">
+            {{ state.inputStatus === 'active' ? 'LIVE' : state.inputStatus === 'preview' ? 'PRV' : state.inputStatus === 'inactive' ? 'OFF' : '' }}
+          </span>
+        }
+        <div class="action-buttons">
+          <button class="beos-btn action-btn clear-btn" title="Clear selection" (click)="clearSelection()">
+            <fa-icon [icon]="clearIcon" />
+          </button>
+          <button class="beos-btn action-btn" title="Save" (click)="onSave()">
+            <fa-icon [icon]="faFloppyDisk" />
+          </button>
+          <button class="beos-btn action-btn" title="Save &amp; Send" (click)="onSaveAndSend()">
+            <fa-icon [icon]="faPaperPlane" />
+          </button>
+          <button class="beos-btn action-btn" title="Save, Send &amp; Show" (click)="onSaveAndSendAndShow()">
+            <fa-icon [icon]="faDisplay" />
+          </button>
+        </div>
+      </div>
+    }
   `,
   styles: `
     :host {
@@ -41,6 +69,10 @@ interface VerseDisplay extends VerseInfo {
       padding: 30px;
       margin: -10px;
       background: #f5f5dc; /* Aged paper color */
+
+      &.has-selection {
+        padding-bottom: 90px;
+      }
     }
 
     .window-container {
@@ -197,12 +229,94 @@ interface VerseDisplay extends VerseInfo {
       flex: 1;
       text-align: justify;
     }
+
+    /* Action Bar */
+    .action-bar {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      background: linear-gradient(to bottom, #e8e8e8 0%, #d0d0d0 100%);
+      border: 2px solid;
+      border-color: #ffffff #606060 #606060 #ffffff;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.35);
+      z-index: 100;
+      animation: slideIn 0.2s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .verse-ref {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #222;
+      white-space: nowrap;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .action-btn {
+      padding: 6px 10px;
+      font-size: 1rem;
+      min-width: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .vmix-status {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 3px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .vmix-active {
+      background: #cc0000;
+      color: #fff;
+    }
+
+    .vmix-preview {
+      background: #4db84d;
+      color: #fff;
+    }
+
+    .vmix-inactive {
+      background: #888;
+      color: #fff;
+    }
+
+    .vmix-unknown {
+      display: none;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Verses {
   private api = inject(Api);
   private route = inject(ActivatedRoute);
+
+  protected faFloppyDisk = faFloppyDisk;
+  protected faPaperPlane = faPaperPlane;
+  protected faDisplay = faDisplay;
+  protected clearIcon = faTrashCan;
 
   protected bookName = signal('');
   protected chapterNumber = signal(0);
@@ -216,8 +330,43 @@ export class Verses {
   protected rightPageColumn1 = signal<VerseDisplay[]>([]);
   protected rightPageColumn2 = signal<VerseDisplay[]>([]);
   protected userSelectedVerses = signal<Set<number>>(new Set());
+  protected vmixState = signal<VmixState | null>(null);
+  private vmixPollTimer: ReturnType<typeof setInterval> | null = null;
+
+  protected formattedReference = computed(() => {
+    const selected = Array.from(this.userSelectedVerses()).sort((a, b) => a - b);
+    if (selected.length === 0) return '';
+
+    // Group consecutive numbers into ranges
+    const ranges: string[] = [];
+    let rangeStart = selected[0];
+    let rangeEnd = selected[0];
+
+    for (let i = 1; i < selected.length; i++) {
+      if (selected[i] === rangeEnd + 1) {
+        rangeEnd = selected[i];
+      } else {
+        ranges.push(rangeStart === rangeEnd ? `${rangeStart}` : `${rangeStart}-${rangeEnd}`);
+        rangeStart = selected[i];
+        rangeEnd = selected[i];
+      }
+    }
+    ranges.push(rangeStart === rangeEnd ? `${rangeStart}` : `${rangeStart}-${rangeEnd}`);
+
+    const book = this.bookName().charAt(0).toUpperCase() + this.bookName().slice(1);
+    return `${book} ${this.chapterNumber()}:${ranges.join(', ')}`;
+  });
+
+  ngOnDestroy() {
+    if (this.vmixPollTimer) {
+      clearInterval(this.vmixPollTimer);
+    }
+  }
 
   async ngOnInit() {
+    this.pollVmixState();
+    this.vmixPollTimer = setInterval(() => this.pollVmixState(), 3000);
+
     // Get parameters from URL
     this.route.queryParams.subscribe(async params => {
       const bookName = params['book'];
@@ -314,5 +463,58 @@ export class Verses {
 
   closeWindow() {
     this.api.actions.closeWindow();
+  }
+
+  clearSelection() {
+    this.userSelectedVerses.set(new Set());
+    const updated = this.verses().map(v => ({ ...v, isUserSelected: false }));
+    this.verses.set(updated);
+    this.distributeVersesToColumns(updated);
+  }
+
+  private async pollVmixState() {
+    try {
+      const state = await this.api.actions.getVmixState();
+      this.vmixState.set(state);
+    } catch {
+      this.vmixState.set(null);
+    }
+  }
+
+  private getSelectedVersesData() {
+    const selectedNumbers = Array.from(this.userSelectedVerses()).sort((a, b) => a - b);
+    const selectedVerses = this.verses().filter(v => selectedNumbers.includes(v.verse));
+
+    const parts: string[] = [];
+    for (let i = 0; i < selectedVerses.length; i++) {
+      if (i > 0 && selectedVerses[i].verse !== selectedVerses[i - 1].verse + 1) {
+        parts.push('...');
+      }
+      parts.push(selectedVerses[i].text);
+    }
+
+    return {
+      title: this.formattedReference(),
+      body: parts.join(' '),
+    };
+  }
+
+  async onSave() {
+    await this.api.actions.saveVerseGroup(this.getSelectedVersesData());
+    this.clearSelection();
+  }
+
+  async onSaveAndSend() {
+    const data = this.getSelectedVersesData();
+    await this.api.actions.saveVerseGroup(data);
+    await this.api.actions.sendToVmix(data.title, data.body);
+    this.clearSelection();
+  }
+
+  async onSaveAndSendAndShow() {
+    const data = this.getSelectedVersesData();
+    await this.api.actions.saveVerseGroup(data);
+    await this.api.actions.sendToVmix(data.title, data.body);
+    this.clearSelection();
   }
 }

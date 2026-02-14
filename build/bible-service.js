@@ -26,6 +26,14 @@ const NEW_TESTAMENT_BOOKS = [
 const BOOK_TESTAMENT_MAP = {};
 OLD_TESTAMENT_BOOKS.forEach(book => BOOK_TESTAMENT_MAP[book] = 'Old');
 NEW_TESTAMENT_BOOKS.forEach(book => BOOK_TESTAMENT_MAP[book] = 'New');
+const DEFAULT_VMIX_SETTINGS = {
+    host: '127.0.0.1',
+    port: 8088,
+    inputKey: '',
+    inputName: '',
+    titleField: '',
+    bodyField: '',
+};
 class BibleService {
     store = null;
     bibleData = null;
@@ -133,6 +141,54 @@ class BibleService {
                 text: verse?.text || '',
             };
         });
+    }
+    saveVerseGroup(group) {
+        if (!this.store)
+            throw new Error('BibleService not initialized');
+        const now = Date.now();
+        const newGroup = {
+            ...group,
+            id: crypto.randomUUID(),
+            createdAt: now,
+            modifiedAt: now,
+        };
+        const groups = this.getVerseGroups();
+        groups.push(newGroup);
+        this.store.set('verseGroups', groups);
+        return newGroup;
+    }
+    getVerseGroups() {
+        if (!this.store)
+            return [];
+        return this.store.get('verseGroups') || [];
+    }
+    updateVerseGroup(group) {
+        if (!this.store)
+            throw new Error('BibleService not initialized');
+        const groups = this.getVerseGroups();
+        const index = groups.findIndex(g => g.id === group.id);
+        if (index === -1)
+            throw new Error('Verse group not found');
+        group.modifiedAt = Date.now();
+        groups[index] = group;
+        this.store.set('verseGroups', groups);
+        return group;
+    }
+    deleteVerseGroup(id) {
+        if (!this.store)
+            throw new Error('BibleService not initialized');
+        const groups = this.getVerseGroups().filter(g => g.id !== id);
+        this.store.set('verseGroups', groups);
+    }
+    getVmixSettings() {
+        if (!this.store)
+            return DEFAULT_VMIX_SETTINGS;
+        return this.store.get('vmixSettings') || DEFAULT_VMIX_SETTINGS;
+    }
+    saveVmixSettings(settings) {
+        if (!this.store)
+            throw new Error('BibleService not initialized');
+        this.store.set('vmixSettings', settings);
     }
 }
 exports.BibleService = BibleService;

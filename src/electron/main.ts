@@ -2,10 +2,12 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { getAppUrl, getAssetUrl, resolveElectronPath } from './utility';
 import { randomUUID  } from 'crypto';
 import { BibleService } from './bible-service';
+import { VmixService } from './vmix-service';
 
 let mainWindow: Electron.BrowserWindow;
 let updateWindow: Electron.BrowserWindow;
 let bibleService: BibleService;
+let vmixService: VmixService;
 
 
 function createWindow() {
@@ -59,6 +61,7 @@ function createWindow() {
 app.on('ready', async () => {
   bibleService = new BibleService();
   await bibleService.initialize();
+  vmixService = new VmixService();
   mainWindow = createWindow();
   //createUpdateWindow()
 });
@@ -180,5 +183,65 @@ ipcMain.handle('sendVerseSelection', (event, bookName: string, chapter: number, 
       chapter: chapter,
       verses: verses
     });
+  }
+});
+
+// Verse Groups API
+ipcMain.handle('saveVerseGroup', (event, group: any) => {
+  return bibleService.saveVerseGroup(group);
+});
+
+ipcMain.handle('getVerseGroups', () => {
+  return bibleService.getVerseGroups();
+});
+
+ipcMain.handle('updateVerseGroup', (event, group: any) => {
+  return bibleService.updateVerseGroup(group);
+});
+
+ipcMain.handle('deleteVerseGroup', (event, id: string) => {
+  bibleService.deleteVerseGroup(id);
+});
+
+// vMix API
+ipcMain.handle('getVmixSettings', () => {
+  return bibleService.getVmixSettings();
+});
+
+ipcMain.handle('saveVmixSettings', (event, settings: any) => {
+  bibleService.saveVmixSettings(settings);
+});
+
+ipcMain.handle('getVmixInputs', async (event, host: string, port: number) => {
+  return vmixService.fetchInputs(host, port);
+});
+
+ipcMain.handle('getVmixState', async () => {
+  try {
+    const settings = bibleService.getVmixSettings();
+    if (!settings.host) {
+      return { active: 0, preview: 0, inputName: '', inputStatus: 'unknown' };
+    }
+    return vmixService.fetchState(settings.host, settings.port, settings.inputKey);
+  } catch {
+    return { active: 0, preview: 0, inputName: '', inputStatus: 'unknown' };
+  }
+});
+
+ipcMain.handle('sendToVmix', async (event, title: string, body: string) => {
+  try {
+    const settings = bibleService.getVmixSettings();
+    if (!settings.inputKey) {
+      return { success: false, error: 'No vMix input configured' };
+    }
+    if (settings.titleField) {
+      await vmixService.setText(settings.host, settings.port, settings.inputKey, settings.titleField, title);
+    }
+    if (settings.bodyField) {
+      await vmixService.setText(settings.host, settings.port, settings.inputKey, settings.bodyField, body);
+    }
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: (error as Error).message };
   }
 });

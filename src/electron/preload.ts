@@ -22,6 +22,17 @@ contextBridge.exposeInMainWorld('api', {
     sendVerseSelection: (bookName: string, chapter: number, verses: any[]) => ipcRenderer.invoke('sendVerseSelection', bookName, chapter, verses),
     onVerseSelection: (callback: (data: any) => void) => {
         ipcRenderer.on('verse-selection', (_event, data) => callback(data));
-    }
+    },
+    // Verse Groups API
+    saveVerseGroup: (group: any) => ipcRenderer.invoke('saveVerseGroup', group),
+    getVerseGroups: () => ipcRenderer.invoke('getVerseGroups'),
+    updateVerseGroup: (group: any) => ipcRenderer.invoke('updateVerseGroup', group),
+    deleteVerseGroup: (id: string) => ipcRenderer.invoke('deleteVerseGroup', id),
+    // vMix API
+    getVmixSettings: () => ipcRenderer.invoke('getVmixSettings'),
+    saveVmixSettings: (settings: any) => ipcRenderer.invoke('saveVmixSettings', settings),
+    getVmixInputs: (host: string, port: number) => ipcRenderer.invoke('getVmixInputs', host, port),
+    sendToVmix: (title: string, body: string) => ipcRenderer.invoke('sendToVmix', title, body),
+    getVmixState: () => ipcRenderer.invoke('getVmixState'),
 } as Api);
 

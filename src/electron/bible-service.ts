@@ -58,6 +58,32 @@ const BOOK_TESTAMENT_MAP: { [key: string]: 'Old' | 'New' } = {};
 OLD_TESTAMENT_BOOKS.forEach(book => BOOK_TESTAMENT_MAP[book] = 'Old');
 NEW_TESTAMENT_BOOKS.forEach(book => BOOK_TESTAMENT_MAP[book] = 'New');
 
+interface StoredVmixSettings {
+  host: string;
+  port: number;
+  inputKey: string;
+  inputName: string;
+  titleField: string;
+  bodyField: string;
+}
+
+const DEFAULT_VMIX_SETTINGS: StoredVmixSettings = {
+  host: '127.0.0.1',
+  port: 8088,
+  inputKey: '',
+  inputName: '',
+  titleField: '',
+  bodyField: '',
+};
+
+interface StoredVerseGroup {
+  id: string;
+  title: string;
+  body: string;
+  createdAt: number;
+  modifiedAt: number;
+}
+
 export class BibleService {
   private store: any = null;
   private bibleData: BibleData | null = null;
@@ -176,5 +202,52 @@ export class BibleService {
         text: verse?.text || '',
       };
     });
+  }
+
+  saveVerseGroup(group: Omit<StoredVerseGroup, 'id' | 'createdAt' | 'modifiedAt'>): StoredVerseGroup {
+    if (!this.store) throw new Error('BibleService not initialized');
+    const now = Date.now();
+    const newGroup: StoredVerseGroup = {
+      ...group,
+      id: crypto.randomUUID(),
+      createdAt: now,
+      modifiedAt: now,
+    };
+    const groups = this.getVerseGroups();
+    groups.push(newGroup);
+    this.store.set('verseGroups', groups);
+    return newGroup;
+  }
+
+  getVerseGroups(): StoredVerseGroup[] {
+    if (!this.store) return [];
+    return (this.store.get('verseGroups') as StoredVerseGroup[] | undefined) || [];
+  }
+
+  updateVerseGroup(group: StoredVerseGroup): StoredVerseGroup {
+    if (!this.store) throw new Error('BibleService not initialized');
+    const groups = this.getVerseGroups();
+    const index = groups.findIndex(g => g.id === group.id);
+    if (index === -1) throw new Error('Verse group not found');
+    group.modifiedAt = Date.now();
+    groups[index] = group;
+    this.store.set('verseGroups', groups);
+    return group;
+  }
+
+  deleteVerseGroup(id: string): void {
+    if (!this.store) throw new Error('BibleService not initialized');
+    const groups = this.getVerseGroups().filter(g => g.id !== id);
+    this.store.set('verseGroups', groups);
+  }
+
+  getVmixSettings(): StoredVmixSettings {
+    if (!this.store) return DEFAULT_VMIX_SETTINGS;
+    return (this.store.get('vmixSettings') as StoredVmixSettings | undefined) || DEFAULT_VMIX_SETTINGS;
+  }
+
+  saveVmixSettings(settings: StoredVmixSettings): void {
+    if (!this.store) throw new Error('BibleService not initialized');
+    this.store.set('vmixSettings', settings);
   }
 }

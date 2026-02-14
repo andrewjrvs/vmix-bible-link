@@ -21,5 +21,16 @@ electron_1.contextBridge.exposeInMainWorld('api', {
     sendVerseSelection: (bookName, chapter, verses) => electron_1.ipcRenderer.invoke('sendVerseSelection', bookName, chapter, verses),
     onVerseSelection: (callback) => {
         electron_1.ipcRenderer.on('verse-selection', (_event, data) => callback(data));
-    }
+    },
+    // Verse Groups API
+    saveVerseGroup: (group) => electron_1.ipcRenderer.invoke('saveVerseGroup', group),
+    getVerseGroups: () => electron_1.ipcRenderer.invoke('getVerseGroups'),
+    updateVerseGroup: (group) => electron_1.ipcRenderer.invoke('updateVerseGroup', group),
+    deleteVerseGroup: (id) => electron_1.ipcRenderer.invoke('deleteVerseGroup', id),
+    // vMix API
+    getVmixSettings: () => electron_1.ipcRenderer.invoke('getVmixSettings'),
+    saveVmixSettings: (settings) => electron_1.ipcRenderer.invoke('saveVmixSettings', settings),
+    getVmixInputs: (host, port) => electron_1.ipcRenderer.invoke('getVmixInputs', host, port),
+    sendToVmix: (title, body) => electron_1.ipcRenderer.invoke('sendToVmix', title, body),
+    getVmixState: () => electron_1.ipcRenderer.invoke('getVmixState'),
 });

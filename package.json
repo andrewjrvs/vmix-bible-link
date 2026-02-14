@@ -31,6 +31,9 @@
     "@angular/forms": "^21.1.0",
     "@angular/platform-browser": "^21.1.0",
     "@angular/router": "^21.1.0",
+    "@fortawesome/angular-fontawesome": "^4.0.0",
+    "@fortawesome/fontawesome-svg-core": "^7.2.0",
+    "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "electron-store": "^11.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
@@ -39,6 +42,7 @@
     "@angular/build": "^21.1.1",
     "@angular/cli": "^21.1.1",
     "@angular/compiler-cli": "^21.1.0",
+    "@types/jsdom": "^27.0.0",
     "electron": "^40.0.0",
     "jsdom": "^27.1.0",
     "typescript": "~5.9.2",
@@ -49,6 +53,9 @@
     "productName": "VMIX Bible Link",
     "files": [
       "build/"
-    ]
+    ],
+    "win": {
+      "target": "portable"
+    }
   }
 }
