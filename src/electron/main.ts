@@ -193,6 +193,16 @@ ipcMain.handle('setWindowTransparency', (_event, enabled: boolean) => {
   }
 });
 
+ipcMain.handle('getWindowBounds', () => {
+  return mainWindow ? mainWindow.getBounds() : { x:0,y:0,width:800,height:600 };
+});
+
+ipcMain.handle('setWindowBounds', (_event, bounds: { x:number; y:number; width:number; height:number }) => {
+  if (mainWindow) {
+    mainWindow.setBounds(bounds);
+  }
+});
+
 // Bible API handlers
 ipcMain.handle('uploadBible', (event, bibleJson: any) => {
   try {

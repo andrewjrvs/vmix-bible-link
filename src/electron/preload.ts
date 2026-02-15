@@ -37,5 +37,7 @@ contextBridge.exposeInMainWorld('api', {
     getVmixState: () => ipcRenderer.invoke('getVmixState'),
     getWindowTransparency: () => ipcRenderer.invoke('getWindowTransparency'),
     setWindowTransparency: (enabled: boolean) => ipcRenderer.invoke('setWindowTransparency', enabled),
+    getWindowBounds: () => ipcRenderer.invoke('getWindowBounds'),
+    setWindowBounds: (bounds: { x:number; y:number; width:number; height:number }) => ipcRenderer.invoke('setWindowBounds', bounds),
 } as Api);
 

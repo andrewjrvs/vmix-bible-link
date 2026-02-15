@@ -61,6 +61,8 @@ export interface Api {
     toggleDevTools: () => void;
     getWindowTransparency: () => Promise<boolean>;
     setWindowTransparency: (enabled: boolean) => Promise<void>;
+    getWindowBounds: () => Promise<{ x:number; y:number; width:number; height:number }>;
+    setWindowBounds: (bounds: { x:number; y:number; width:number; height:number }) => Promise<void>;
     // Bible API
     uploadBible: (bibleJson: any) => Promise<{ success: boolean; error?: string }>;
     isBibleLoaded: () => Promise<boolean>;
