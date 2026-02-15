@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Api } from '../../services/api';
+import { SessionService } from '../../services/session';
 import { BookInfo, VerseInfo, SelectedVerseData } from '../../../electron/api';
 
 interface ExpandedBook extends BookInfo {
@@ -22,7 +23,7 @@ interface ExpandedBook extends BookInfo {
             <div class="testament-header">Old Testament</div>
             <div class="books-list">
               @for (book of oldTestamentExpanded(); track book.name) {
-                <div class="book-accordion">
+                <div class="book-accordion" [id]="'book-' + book.name">
                   <button
                     class="book-header beos-btn"
                     (click)="toggleBook(book)"
@@ -54,7 +55,7 @@ interface ExpandedBook extends BookInfo {
             <div class="testament-header">New Testament</div>
             <div class="books-list">
               @for (book of newTestamentExpanded(); track book.name) {
-                <div class="book-accordion">
+                <div class="book-accordion" [id]="'book-' + book.name">
                   <button
                     class="book-header beos-btn"
                     (click)="toggleBook(book)"
@@ -213,9 +214,10 @@ interface ExpandedBook extends BookInfo {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Home {
+export class Home implements OnDestroy {
   private api = inject(Api);
   private router = inject(Router);
+  private session = inject(SessionService);
 
   protected bibleLoaded = signal(false);
   protected uploading = signal(false);
@@ -231,11 +233,70 @@ export class Home {
 
     if (loaded) {
       await this.loadBooks();
+      await this.restoreSessionState();
     }
 
     // Listen for verse selections from verse reader window
     this.api.actions.onVerseSelection((data: SelectedVerseData) => {
       this.selectedVerseData.set(data);
+    });
+  }
+
+  ngOnDestroy() {
+    // Save scroll position before leaving
+    const main = document.querySelector('main');
+    if (main) {
+      this.session.scrollTop = main.scrollTop;
+    }
+
+    // Save expanded book names
+    this.session.expandedBooks.clear();
+    const allBooks = [...this.oldTestamentExpanded(), ...this.newTestamentExpanded()];
+    for (const book of allBooks) {
+      if (book.expanded) {
+        this.session.expandedBooks.add(book.name);
+      }
+    }
+  }
+
+  private async restoreSessionState() {
+    const allBooks = [...this.oldTestamentExpanded(), ...this.newTestamentExpanded()];
+
+    // Restore expanded accordions and load their chapter numbers
+    for (const book of allBooks) {
+      if (this.session.expandedBooks.has(book.name)) {
+        book.expanded = true;
+        if (book.chapterNumbers.length === 0) {
+          const chapterCount = await this.api.actions.getChapterCount(book.name);
+          book.chapterNumbers = Array.from({ length: chapterCount }, (_, i) => i + 1);
+        }
+        // Restore selected chapter highlight
+        if (book.name === this.session.selectedBook()) {
+          book.selectedChapter = this.session.selectedChapter();
+        }
+      }
+    }
+
+    this.oldTestamentExpanded.set([...this.oldTestamentExpanded()]);
+    this.newTestamentExpanded.set([...this.newTestamentExpanded()]);
+
+    // Wait for Angular to render, then scroll to the selected book
+    requestAnimationFrame(() => {
+      const selectedBook = this.session.selectedBook();
+      if (selectedBook) {
+        const el = document.getElementById('book-' + selectedBook);
+        if (el) {
+          el.scrollIntoView({ block: 'center' });
+          return;
+        }
+      }
+      // Fallback: restore raw scroll position
+      if (this.session.scrollTop > 0) {
+        const main = document.querySelector('main');
+        if (main) {
+          main.scrollTop = this.session.scrollTop;
+        }
+      }
     });
   }
 
@@ -305,6 +366,13 @@ export class Home {
       book.chapterNumbers = Array.from({ length: chapterCount }, (_, i) => i + 1);
     }
 
+    // Update session
+    if (book.expanded) {
+      this.session.expandedBooks.add(book.name);
+    } else {
+      this.session.expandedBooks.delete(book.name);
+    }
+
     // Trigger change detection
     this.oldTestamentExpanded.set([...this.oldTestamentExpanded()]);
     this.newTestamentExpanded.set([...this.newTestamentExpanded()]);
@@ -322,10 +390,14 @@ export class Home {
       book.showVerseModal = true;
     }
 
+    // Update session
+    this.session.selectedBook.set(book.name);
+    this.session.selectedChapter.set(chapter);
+
     // Trigger change detection
     this.oldTestamentExpanded.set([...this.oldTestamentExpanded()]);
     this.newTestamentExpanded.set([...this.newTestamentExpanded()]);
-    
+
     this.router.navigate(['/verses'], {
       queryParams: {
         book: book.name,

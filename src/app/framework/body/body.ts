@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Api } from '../../services/api';
+import { SessionService } from '../../services/session';
 import { VmixState } from '../../../electron/api';
 
 @Component({
@@ -11,7 +12,7 @@ import { VmixState } from '../../../electron/api';
       <ul>
         <li class="nav-disabled"><button type="button" ><img src="icons/search.svg" /> <span>Search</span> </button></li>
         <li><button type="button" routerLinkActive="selected" [routerLinkActiveOptions]="{exact: true}" routerLink="/"><img src="icons/bookmark.svg" /> <span>Bible</span> </button></li>
-        <li class="nav-disabled"><button type="button" routerLinkActive="selected" routerLink="/verses" [queryParams]="{ book: 'genesis', chapter: '1' }"><img src="icons/blocks.svg" /> <span>Verses</span> </button></li>
+        <li [class.nav-disabled]="!session.hasSelection()"><button type="button" routerLinkActive="selected" routerLink="/verses" [queryParams]="{ book: session.selectedBook(), chapter: session.selectedChapter() }"><img src="icons/blocks.svg" /> <span>Verses</span> </button></li>
         <li><button type="button" routerLinkActive="selected" routerLink="/saved"><img src="icons/desktop.svg" /> <span>Saved</span> </button></li>
         <li><button type="button" routerLinkActive="selected" routerLink="/settings"><img src="icons/edit.svg" /> <span>Settings</span> </button></li>
       </ul>
@@ -64,6 +65,7 @@ import { VmixState } from '../../../electron/api';
 })
 export class Body implements OnInit, OnDestroy {
   private api = inject(Api);
+  protected session = inject(SessionService);
   protected vmixState = signal<VmixState | null>(null);
   private pollTimer: ReturnType<typeof setInterval> | null = null;
 
