@@ -51,7 +51,6 @@
   "build": {
     "appId": "vmix-bible-link",
     "productName": "VMIX Bible Link",
-    "publisherName": "andrewjrvs",
     "artifactName": "vmix-bible-link.${ext}",
     "icon": "icon.png",
     "files": [
