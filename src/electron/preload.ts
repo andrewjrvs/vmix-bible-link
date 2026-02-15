@@ -35,5 +35,7 @@ contextBridge.exposeInMainWorld('api', {
     sendToVmix: (title: string, body: string) => ipcRenderer.invoke('sendToVmix', title, body),
     sendToVmixAndShow: (title: string, body: string) => ipcRenderer.invoke('sendToVmixAndShow', title, body),
     getVmixState: () => ipcRenderer.invoke('getVmixState'),
+    getWindowTransparency: () => ipcRenderer.invoke('getWindowTransparency'),
+    setWindowTransparency: (enabled: boolean) => ipcRenderer.invoke('setWindowTransparency', enabled),
 } as Api);
 

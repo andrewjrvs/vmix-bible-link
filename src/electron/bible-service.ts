@@ -68,6 +68,11 @@ interface StoredVmixSettings {
   overlay: number;
 }
 
+// additional stored preferences for the application window
+interface StoredAppSettings {
+  windowTransparent: boolean;
+}
+
 const DEFAULT_VMIX_SETTINGS: StoredVmixSettings = {
   host: '127.0.0.1',
   port: 8088,
@@ -251,5 +256,16 @@ export class BibleService {
   saveVmixSettings(settings: StoredVmixSettings): void {
     if (!this.store) throw new Error('BibleService not initialized');
     this.store.set('vmixSettings', settings);
+  }
+
+  // window/app preferences
+  getWindowTransparency(): boolean {
+    if (!this.store) return true;
+    return (this.store.get('windowTransparent') as boolean | undefined) ?? true;
+  }
+
+  setWindowTransparency(enabled: boolean): void {
+    if (!this.store) throw new Error('BibleService not initialized');
+    this.store.set('windowTransparent', enabled);
   }
 }

@@ -6,6 +6,15 @@ import { VmixService } from './vmix-service';
 import fs from 'fs';
 import path from 'path';
 
+// prevent Chromium from throttling or degrading background/occluded windows
+// this should be set as early as possible, before the app is ready
+app.commandLine.appendSwitch('disable-backgrounding-occluded-windows');
+app.commandLine.appendSwitch('disable-renderer-backgrounding');
+app.commandLine.appendSwitch('disable-background-timer-throttling');
+app.commandLine.appendSwitch('high-dpi-support', '1');
+app.commandLine.appendSwitch('force-device-scale-factor', '1');
+
+
 const logFile = path.join(app.getPath('userData'), 'app.log');
 function log(message: string) {
   const entry = `[${new Date().toISOString()}] ${message}`;
@@ -27,11 +36,14 @@ function createWindow() {
   log(`Preload exists: ${fs.existsSync(preloadPath)}`);
   log(`Icon exists: ${fs.existsSync(iconPath)}`);
 
+  // read the user preference for transparency; defaults to true if not set
+  const isTransparent = bibleService?.getWindowTransparency ? bibleService.getWindowTransparency() : true;
+
   const rtnWindow = new BrowserWindow({
     height: 600,
     width: 800,
     frame: false,       // Hides the native title bar and frame
-    transparent: true,  // Makes the window background transparent
+    transparent: isTransparent,  // respect user preference
     icon: iconPath,
     webPreferences: {
       preload: preloadPath,
@@ -159,6 +171,28 @@ ipcMain.handle('toggleDevTools', (event, windowId: string) => {
   }
 });
 
+// window transparency preference handlers
+ipcMain.handle('getWindowTransparency', () => {
+  return bibleService ? bibleService.getWindowTransparency() : true;
+});
+
+ipcMain.handle('setWindowTransparency', (_event, enabled: boolean) => {
+  if (bibleService) {
+    bibleService.setWindowTransparency(enabled);
+  }
+
+  // if the main window already exists, recreate it so the new option takes effect
+  if (mainWindow) {
+    const maximized = mainWindow.isMaximized();
+    // preserve size/position if desired
+    mainWindow.close();
+    mainWindow = createWindow();
+    if (maximized) {
+      mainWindow.maximize();
+    }
+  }
+});
+
 // Bible API handlers
 ipcMain.handle('uploadBible', (event, bibleJson: any) => {
   try {
@@ -203,11 +237,12 @@ ipcMain.handle('getChapterVerses', (event, bookName: string, chapter: number) =>
 });
 
 ipcMain.handle('openVerseWindow', (event, bookName: string, chapter: number, selectedVerses: number[]) => {
+  const isTransparent = bibleService?.getWindowTransparency ? bibleService.getWindowTransparency() : true;
   const verseWindow = new BrowserWindow({
     height: 800,
     width: 1200,
     frame: false,
-    transparent: true,
+    transparent: isTransparent,
     icon: getAssetUrl('favicon.ico'),
     webPreferences: {
       preload: resolveElectronPath('preload.js')
