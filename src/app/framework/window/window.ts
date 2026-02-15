@@ -43,6 +43,7 @@ interface Bounds { x: number; y: number; width: number; height: number; }
       left: 0;
       right: 0;
       height: 6px;
+      bottom: 0px;
       cursor: ns-resize;
     }
     .resize-handle.bottom-left  { bottom: 0; left: 0; width: 6px; height: 6px; cursor: nesw-resize; }
