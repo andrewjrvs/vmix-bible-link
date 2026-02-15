@@ -35,6 +35,7 @@ export interface VmixSettings {
     inputName: string;
     titleField: string;
     bodyField: string;
+    overlay: number;
 }
 
 export interface VmixInput {
@@ -78,5 +79,6 @@ export interface Api {
     saveVmixSettings: (settings: VmixSettings) => Promise<void>;
     getVmixInputs: (host: string, port: number) => Promise<VmixInput[]>;
     sendToVmix: (title: string, body: string) => Promise<{ success: boolean; error?: string }>;
+    sendToVmixAndShow: (title: string, body: string) => Promise<{ success: boolean; error?: string }>;
     getVmixState: () => Promise<VmixState>;
 }

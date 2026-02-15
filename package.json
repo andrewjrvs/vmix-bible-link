@@ -35,6 +35,7 @@
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "electron-store": "^11.0.2",
+    "jsdom": "^27.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -44,18 +45,22 @@
     "@angular/compiler-cli": "^21.1.0",
     "@types/jsdom": "^27.0.0",
     "electron": "^40.0.0",
-    "jsdom": "^27.1.0",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   },
   "build": {
     "appId": "vmix-bible-link",
     "productName": "VMIX Bible Link",
+    "artifactName": "vmix-bible-link.${ext}",
+    "icon": "icon.png",
     "files": [
       "build/"
     ],
     "win": {
-      "target": "portable"
+      "target": "portable",
+      "forceCodeSigning": false,
+      "signAndEditExecutable": false,
+      "icon": "icon.png"
     }
   }
 }

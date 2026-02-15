@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faTrashCan, faFloppyDisk, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan, faFloppyDisk, faPen, faPaperPlane, faDisplay } from '@fortawesome/free-solid-svg-icons';
 import { Api } from '../../services/api';
 import { VerseGroup } from '../../../electron/api';
 
@@ -46,6 +46,12 @@ interface EditableVerseGroup extends VerseGroup {
               <span class="group-date">{{ group.modifiedAt | date:'short' }}</span>
             </div>
             <div class="group-actions">
+              <button class="beos-btn action-btn send-btn" title="Send to vMix" (click)="sendToVmix(group)">
+                <fa-icon [icon]="faPaperPlane" />
+              </button>
+              <button class="beos-btn action-btn send-show-btn" title="Send &amp; Show" (click)="sendAndShow(group)">
+                <fa-icon [icon]="faDisplay" />
+              </button>
               <button class="beos-btn action-btn" title="Edit" (click)="startEdit(group)">
                 <fa-icon [icon]="faPen" />
               </button>
@@ -161,6 +167,20 @@ interface EditableVerseGroup extends VerseGroup {
       }
     }
 
+    .send-btn {
+      &:hover {
+        background: linear-gradient(to bottom, #4a90e2 0%, #357abd 100%);
+        color: white;
+      }
+    }
+
+    .send-show-btn {
+      &:hover {
+        background: linear-gradient(to bottom, #6bc76b 0%, #4db84d 100%);
+        color: white;
+      }
+    }
+
     .delete-btn {
       &:hover {
         background: linear-gradient(to bottom, #ff5555 0%, #dd3333 100%);
@@ -209,6 +229,8 @@ export class Saved {
   protected faTrashCan = faTrashCan;
   protected faFloppyDisk = faFloppyDisk;
   protected faPen = faPen;
+  protected faPaperPlane = faPaperPlane;
+  protected faDisplay = faDisplay;
 
   protected groups = signal<EditableVerseGroup[]>([]);
 
@@ -255,5 +277,13 @@ export class Saved {
   async deleteGroup(group: EditableVerseGroup) {
     await this.api.actions.deleteVerseGroup(group.id);
     this.groups.set(this.groups().filter(g => g.id !== group.id));
+  }
+
+  async sendToVmix(group: EditableVerseGroup) {
+    await this.api.actions.sendToVmix(group.title, group.body);
+  }
+
+  async sendAndShow(group: EditableVerseGroup) {
+    await this.api.actions.sendToVmixAndShow(group.title, group.body);
   }
 }

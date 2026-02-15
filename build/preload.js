@@ -32,5 +32,6 @@ electron_1.contextBridge.exposeInMainWorld('api', {
     saveVmixSettings: (settings) => electron_1.ipcRenderer.invoke('saveVmixSettings', settings),
     getVmixInputs: (host, port) => electron_1.ipcRenderer.invoke('getVmixInputs', host, port),
     sendToVmix: (title, body) => electron_1.ipcRenderer.invoke('sendToVmix', title, body),
+    sendToVmixAndShow: (title, body) => electron_1.ipcRenderer.invoke('sendToVmixAndShow', title, body),
     getVmixState: () => electron_1.ipcRenderer.invoke('getVmixState'),
 });

@@ -65,6 +65,7 @@ interface StoredVmixSettings {
   inputName: string;
   titleField: string;
   bodyField: string;
+  overlay: number;
 }
 
 const DEFAULT_VMIX_SETTINGS: StoredVmixSettings = {
@@ -74,6 +75,7 @@ const DEFAULT_VMIX_SETTINGS: StoredVmixSettings = {
   inputName: '',
   titleField: '',
   bodyField: '',
+  overlay: 1,
 };
 
 interface StoredVerseGroup {

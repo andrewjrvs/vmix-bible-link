@@ -33,6 +33,7 @@ const DEFAULT_VMIX_SETTINGS = {
     inputName: '',
     titleField: '',
     bodyField: '',
+    overlay: 1,
 };
 class BibleService {
     store = null;

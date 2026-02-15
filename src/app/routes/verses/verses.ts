@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk, faPaperPlane, faDisplay, faBroom, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { Api } from '../../services/api';
-import { VerseInfo, VmixState } from '../../../electron/api';
+import { VerseInfo } from '../../../electron/api';
 
 interface VerseDisplay extends VerseInfo {
   isSelected: boolean;
@@ -40,16 +40,11 @@ interface VerseDisplay extends VerseInfo {
 
     @if (userSelectedVerses().size > 0) {
       <div class="action-bar">
+        <button class="beos-btn action-btn clear-btn" title="Clear selection" (click)="clearSelection()">
+          <fa-icon [icon]="clearIcon" />
+        </button>
         <span class="verse-ref">{{ formattedReference() }}</span>
-        @if (vmixState(); as state) {
-          <span class="vmix-status" [class]="'vmix-status vmix-' + state.inputStatus" [title]="state.inputName">
-            {{ state.inputStatus === 'active' ? 'LIVE' : state.inputStatus === 'preview' ? 'PRV' : state.inputStatus === 'inactive' ? 'OFF' : '' }}
-          </span>
-        }
         <div class="action-buttons">
-          <button class="beos-btn action-btn clear-btn" title="Clear selection" (click)="clearSelection()">
-            <fa-icon [icon]="clearIcon" />
-          </button>
           <button class="beos-btn action-btn" title="Save" (click)="onSave()">
             <fa-icon [icon]="faFloppyDisk" />
           </button>
@@ -279,33 +274,6 @@ interface VerseDisplay extends VerseInfo {
       justify-content: center;
     }
 
-    .vmix-status {
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 3px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .vmix-active {
-      background: #cc0000;
-      color: #fff;
-    }
-
-    .vmix-preview {
-      background: #4db84d;
-      color: #fff;
-    }
-
-    .vmix-inactive {
-      background: #888;
-      color: #fff;
-    }
-
-    .vmix-unknown {
-      display: none;
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -330,8 +298,6 @@ export class Verses {
   protected rightPageColumn1 = signal<VerseDisplay[]>([]);
   protected rightPageColumn2 = signal<VerseDisplay[]>([]);
   protected userSelectedVerses = signal<Set<number>>(new Set());
-  protected vmixState = signal<VmixState | null>(null);
-  private vmixPollTimer: ReturnType<typeof setInterval> | null = null;
 
   protected formattedReference = computed(() => {
     const selected = Array.from(this.userSelectedVerses()).sort((a, b) => a - b);
@@ -357,16 +323,7 @@ export class Verses {
     return `${book} ${this.chapterNumber()}:${ranges.join(', ')}`;
   });
 
-  ngOnDestroy() {
-    if (this.vmixPollTimer) {
-      clearInterval(this.vmixPollTimer);
-    }
-  }
-
   async ngOnInit() {
-    this.pollVmixState();
-    this.vmixPollTimer = setInterval(() => this.pollVmixState(), 3000);
-
     // Get parameters from URL
     this.route.queryParams.subscribe(async params => {
       const bookName = params['book'];
@@ -472,15 +429,6 @@ export class Verses {
     this.distributeVersesToColumns(updated);
   }
 
-  private async pollVmixState() {
-    try {
-      const state = await this.api.actions.getVmixState();
-      this.vmixState.set(state);
-    } catch {
-      this.vmixState.set(null);
-    }
-  }
-
   private getSelectedVersesData() {
     const selectedNumbers = Array.from(this.userSelectedVerses()).sort((a, b) => a - b);
     const selectedVerses = this.verses().filter(v => selectedNumbers.includes(v.verse));
@@ -514,7 +462,7 @@ export class Verses {
   async onSaveAndSendAndShow() {
     const data = this.getSelectedVersesData();
     await this.api.actions.saveVerseGroup(data);
-    await this.api.actions.sendToVmix(data.title, data.body);
+    await this.api.actions.sendToVmixAndShow(data.title, data.body);
     this.clearSelection();
   }
 }

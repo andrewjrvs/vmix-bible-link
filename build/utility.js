@@ -18,7 +18,7 @@ function getAppUrl(route = '') {
 }
 function getAssetUrl(asset) {
     const isDev = process.argv.includes('--dev');
-    return path_1.default.resolve(__dirname, isDev ? '../src/assets' : 'browser/assets', asset);
+    return path_1.default.resolve(__dirname, isDev ? '../src/assets' : 'browser', asset);
 }
 function resolveElectronPath(file) {
     return path_1.default.resolve(__dirname, file);

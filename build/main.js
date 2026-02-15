@@ -1,31 +1,63 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
 const electron_1 = require("electron");
 const utility_1 = require("./utility");
 const crypto_1 = require("crypto");
 const bible_service_1 = require("./bible-service");
 const vmix_service_1 = require("./vmix-service");
+const fs_1 = tslib_1.__importDefault(require("fs"));
+const path_1 = tslib_1.__importDefault(require("path"));
+const logFile = path_1.default.join(electron_1.app.getPath('userData'), 'app.log');
+function log(message) {
+    const entry = `[${new Date().toISOString()}] ${message}`;
+    console.log(entry);
+    fs_1.default.appendFileSync(logFile, entry + '\n');
+}
 let mainWindow;
 let updateWindow;
 let bibleService;
 let vmixService;
 function createWindow() {
     const windowKey = (0, crypto_1.randomUUID)();
+    const preloadPath = (0, utility_1.resolveElectronPath)('preload.js');
+    const iconPath = (0, utility_1.getAssetUrl)('favicon.ico');
+    log(`Creating window: preload=${preloadPath} icon=${iconPath}`);
+    log(`Preload exists: ${fs_1.default.existsSync(preloadPath)}`);
+    log(`Icon exists: ${fs_1.default.existsSync(iconPath)}`);
     const rtnWindow = new electron_1.BrowserWindow({
         height: 600,
         width: 800,
         frame: false, // Hides the native title bar and frame
-        transparent: true, // Makes the window background transparent    
-        icon: (0, utility_1.getAssetUrl)('favicon.ico'),
+        transparent: true, // Makes the window background transparent
+        icon: iconPath,
         webPreferences: {
-            preload: (0, utility_1.resolveElectronPath)('preload.js'),
+            preload: preloadPath,
             additionalArguments: [`--window-id=${windowKey}`]
         }
     });
     rtnWindow.removeMenu();
     const route = (0, utility_1.getAppUrl)();
-    rtnWindow.loadURL(route);
+    log(`Loading URL: ${route}`);
+    rtnWindow.loadURL(route).then(() => {
+        log('URL loaded successfully');
+    }).catch((err) => {
+        log(`Failed to load URL: ${err.message}`);
+    });
+    rtnWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL) => {
+        log(`did-fail-load: code=${errorCode} desc=${errorDescription} url=${validatedURL}`);
+    });
+    rtnWindow.webContents.on('did-finish-load', () => {
+        log('did-finish-load');
+    });
+    rtnWindow.webContents.on('render-process-gone', (_event, details) => {
+        log(`render-process-gone: reason=${details.reason} exitCode=${details.exitCode}`);
+    });
+    rtnWindow.on('unresponsive', () => {
+        log('Window became unresponsive');
+    });
     rtnWindow.on('closed', () => {
+        log('Window closed');
         rtnWindow.destroy();
     });
     return rtnWindow;
@@ -49,9 +81,26 @@ function createWindow() {
 //   });
 // }
 electron_1.app.on('ready', async () => {
-    bibleService = new bible_service_1.BibleService();
-    await bibleService.initialize();
-    vmixService = new vmix_service_1.VmixService();
+    log(`App ready. userData=${electron_1.app.getPath('userData')}`);
+    log(`__dirname=${__dirname}`);
+    log(`process.argv=${JSON.stringify(process.argv)}`);
+    log(`process.cwd=${process.cwd()}`);
+    log(`process.resourcesPath=${process.resourcesPath}`);
+    try {
+        bibleService = new bible_service_1.BibleService();
+        await bibleService.initialize();
+        log('BibleService initialized');
+    }
+    catch (err) {
+        log(`BibleService failed: ${err.message}`);
+    }
+    try {
+        vmixService = new vmix_service_1.VmixService();
+        log('VmixService initialized');
+    }
+    catch (err) {
+        log(`VmixService failed: ${err.message}`);
+    }
     mainWindow = createWindow();
     //createUpdateWindow()
 });
@@ -191,7 +240,7 @@ electron_1.ipcMain.handle('getVmixState', async () => {
         if (!settings.host) {
             return { active: 0, preview: 0, inputName: '', inputStatus: 'unknown' };
         }
-        return vmixService.fetchState(settings.host, settings.port, settings.inputKey);
+        return vmixService.fetchState(settings.host, settings.port, settings.inputKey, settings.overlay || 1);
     }
     catch {
         return { active: 0, preview: 0, inputName: '', inputStatus: 'unknown' };
@@ -209,6 +258,26 @@ electron_1.ipcMain.handle('sendToVmix', async (event, title, body) => {
         if (settings.bodyField) {
             await vmixService.setText(settings.host, settings.port, settings.inputKey, settings.bodyField, body);
         }
+        return { success: true };
+    }
+    catch (error) {
+        return { success: false, error: error.message };
+    }
+});
+electron_1.ipcMain.handle('sendToVmixAndShow', async (event, title, body) => {
+    try {
+        const settings = bibleService.getVmixSettings();
+        if (!settings.inputKey) {
+            return { success: false, error: 'No vMix input configured' };
+        }
+        if (settings.titleField) {
+            await vmixService.setText(settings.host, settings.port, settings.inputKey, settings.titleField, title);
+        }
+        if (settings.bodyField) {
+            await vmixService.setText(settings.host, settings.port, settings.inputKey, settings.bodyField, body);
+        }
+        const overlay = settings.overlay || 1;
+        await vmixService.setOverlay(settings.host, settings.port, overlay, settings.inputKey);
         return { success: true };
     }
     catch (error) {

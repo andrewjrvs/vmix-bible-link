@@ -14,7 +14,7 @@ export function getAppUrl(route: string = '') {
 
 export function getAssetUrl(asset: string) {
     const isDev = process.argv.includes('--dev')
-    return path.resolve(__dirname, isDev ? '../src/assets' : 'browser/assets', asset);
+    return path.resolve(__dirname, isDev ? '../src/assets' : 'browser', asset);
 }
 
 export function resolveElectronPath(file: string): string {

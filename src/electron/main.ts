@@ -3,6 +3,15 @@ import { getAppUrl, getAssetUrl, resolveElectronPath } from './utility';
 import { randomUUID  } from 'crypto';
 import { BibleService } from './bible-service';
 import { VmixService } from './vmix-service';
+import fs from 'fs';
+import path from 'path';
+
+const logFile = path.join(app.getPath('userData'), 'app.log');
+function log(message: string) {
+  const entry = `[${new Date().toISOString()}] ${message}`;
+  console.log(entry);
+  fs.appendFileSync(logFile, entry + '\n');
+}
 
 let mainWindow: Electron.BrowserWindow;
 let updateWindow: Electron.BrowserWindow;
@@ -12,24 +21,52 @@ let vmixService: VmixService;
 
 function createWindow() {
   const windowKey = randomUUID();
+  const preloadPath = resolveElectronPath('preload.js');
+  const iconPath = getAssetUrl('favicon.ico');
+  log(`Creating window: preload=${preloadPath} icon=${iconPath}`);
+  log(`Preload exists: ${fs.existsSync(preloadPath)}`);
+  log(`Icon exists: ${fs.existsSync(iconPath)}`);
+
   const rtnWindow = new BrowserWindow({
     height: 600,
     width: 800,
     frame: false,       // Hides the native title bar and frame
-    transparent: true,  // Makes the window background transparent    
-    icon: getAssetUrl('favicon.ico'),
+    transparent: true,  // Makes the window background transparent
+    icon: iconPath,
     webPreferences: {
-      preload: resolveElectronPath('preload.js'),
+      preload: preloadPath,
       additionalArguments: [`--window-id=${windowKey}`]
     }
   });
   rtnWindow.removeMenu()
 
   const route = getAppUrl()
+  log(`Loading URL: ${route}`);
 
-  rtnWindow.loadURL(route)
+  rtnWindow.loadURL(route).then(() => {
+    log('URL loaded successfully');
+  }).catch((err) => {
+    log(`Failed to load URL: ${err.message}`);
+  });
+
+  rtnWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL) => {
+    log(`did-fail-load: code=${errorCode} desc=${errorDescription} url=${validatedURL}`);
+  });
+
+  rtnWindow.webContents.on('did-finish-load', () => {
+    log('did-finish-load');
+  });
+
+  rtnWindow.webContents.on('render-process-gone', (_event, details) => {
+    log(`render-process-gone: reason=${details.reason} exitCode=${details.exitCode}`);
+  });
+
+  rtnWindow.on('unresponsive', () => {
+    log('Window became unresponsive');
+  });
 
   rtnWindow.on('closed', () => {
+    log('Window closed');
     rtnWindow.destroy()
   });
 
@@ -59,9 +96,27 @@ function createWindow() {
 // }
 
 app.on('ready', async () => {
-  bibleService = new BibleService();
-  await bibleService.initialize();
-  vmixService = new VmixService();
+  log(`App ready. userData=${app.getPath('userData')}`);
+  log(`__dirname=${__dirname}`);
+  log(`process.argv=${JSON.stringify(process.argv)}`);
+  log(`process.cwd=${process.cwd()}`);
+  log(`process.resourcesPath=${process.resourcesPath}`);
+
+  try {
+    bibleService = new BibleService();
+    await bibleService.initialize();
+    log('BibleService initialized');
+  } catch (err) {
+    log(`BibleService failed: ${(err as Error).message}`);
+  }
+
+  try {
+    vmixService = new VmixService();
+    log('VmixService initialized');
+  } catch (err) {
+    log(`VmixService failed: ${(err as Error).message}`);
+  }
+
   mainWindow = createWindow();
   //createUpdateWindow()
 });
@@ -222,7 +277,7 @@ ipcMain.handle('getVmixState', async () => {
     if (!settings.host) {
       return { active: 0, preview: 0, inputName: '', inputStatus: 'unknown' };
     }
-    return vmixService.fetchState(settings.host, settings.port, settings.inputKey);
+    return vmixService.fetchState(settings.host, settings.port, settings.inputKey, settings.overlay || 1);
   } catch {
     return { active: 0, preview: 0, inputName: '', inputStatus: 'unknown' };
   }
@@ -240,6 +295,26 @@ ipcMain.handle('sendToVmix', async (event, title: string, body: string) => {
     if (settings.bodyField) {
       await vmixService.setText(settings.host, settings.port, settings.inputKey, settings.bodyField, body);
     }
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: (error as Error).message };
+  }
+});
+
+ipcMain.handle('sendToVmixAndShow', async (event, title: string, body: string) => {
+  try {
+    const settings = bibleService.getVmixSettings();
+    if (!settings.inputKey) {
+      return { success: false, error: 'No vMix input configured' };
+    }
+    if (settings.titleField) {
+      await vmixService.setText(settings.host, settings.port, settings.inputKey, settings.titleField, title);
+    }
+    if (settings.bodyField) {
+      await vmixService.setText(settings.host, settings.port, settings.inputKey, settings.bodyField, body);
+    }
+    const overlay = settings.overlay || 1;
+    await vmixService.setOverlay(settings.host, settings.port, overlay, settings.inputKey);
     return { success: true };
   } catch (error) {
     return { success: false, error: (error as Error).message };

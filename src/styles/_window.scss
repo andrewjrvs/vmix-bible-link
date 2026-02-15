@@ -126,6 +126,15 @@ $base-titlebar-height: var(--t-h, 30px);
             margin: 0;
             padding: 0;
 
+            &.nav-disabled > button:not(.selected) {
+                pointer-events: none;
+                cursor: default;
+                opacity: 0.5;
+                img {
+                    filter: grayscale(100%);
+                }
+            }
+
             > button {
                 all: unset;
                 cursor: pointer;

@@ -60,6 +60,14 @@ import { VmixInput, VmixSettings } from '../../../electron/api';
           }
         </select>
       </div>
+      <div class="form-row">
+        <label>Overlay</label>
+        <select class="beos-input" [(ngModel)]="overlay">
+          @for (n of overlayOptions; track n) {
+            <option [value]="n">Overlay {{ n }}</option>
+          }
+        </select>
+      </div>
     }
 
     <div class="form-row actions">
@@ -175,6 +183,8 @@ export class VmixSettingsComponent {
   protected selectedInputKey = '';
   protected titleField = '';
   protected bodyField = '';
+  protected overlay = 1;
+  protected overlayOptions = [1, 2, 3, 4];
 
   protected inputs = signal<VmixInput[]>([]);
   protected selectedFields = signal<string[]>([]);
@@ -189,6 +199,7 @@ export class VmixSettingsComponent {
     this.selectedInputKey = settings.inputKey;
     this.titleField = settings.titleField;
     this.bodyField = settings.bodyField;
+    this.overlay = settings.overlay || 1;
   }
 
   async refreshInputs() {
@@ -229,6 +240,7 @@ export class VmixSettingsComponent {
       inputName: input?.name || '',
       titleField: this.titleField,
       bodyField: this.bodyField,
+      overlay: this.overlay,
     };
     await this.api.actions.saveVmixSettings(settings);
     this.saved.set(true);

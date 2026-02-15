@@ -33,6 +33,7 @@ contextBridge.exposeInMainWorld('api', {
     saveVmixSettings: (settings: any) => ipcRenderer.invoke('saveVmixSettings', settings),
     getVmixInputs: (host: string, port: number) => ipcRenderer.invoke('getVmixInputs', host, port),
     sendToVmix: (title: string, body: string) => ipcRenderer.invoke('sendToVmix', title, body),
+    sendToVmixAndShow: (title: string, body: string) => ipcRenderer.invoke('sendToVmixAndShow', title, body),
     getVmixState: () => ipcRenderer.invoke('getVmixState'),
 } as Api);
 
