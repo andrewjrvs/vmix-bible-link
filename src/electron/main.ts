@@ -11,8 +11,8 @@ import path from 'path';
 app.commandLine.appendSwitch('disable-backgrounding-occluded-windows');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 app.commandLine.appendSwitch('disable-background-timer-throttling');
+app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
 app.commandLine.appendSwitch('high-dpi-support', '1');
-app.commandLine.appendSwitch('force-device-scale-factor', '1');
 
 
 const logFile = path.join(app.getPath('userData'), 'app.log');

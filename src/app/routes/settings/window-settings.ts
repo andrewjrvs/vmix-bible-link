@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Api } from '../../services/api';
 
 @Component({
   selector: 'jar-window-settings',
-  imports: [FormsModule],
+  imports: [],
   template: `
     <h2>Window</h2>
     <div class="form-row">
@@ -12,9 +11,9 @@ import { Api } from '../../services/api';
       <input
         id="transparent"
         type="checkbox"
-        class="beos-input" 
-        [(ngModel)]="transparent"
-        (change)="save()"
+        class="beos-input"
+        [checked]="transparent()"
+        (change)="onToggle($event)"
       />
     </div>
 
@@ -62,19 +61,21 @@ import { Api } from '../../services/api';
 export class WindowSettingsComponent {
   private api = inject(Api);
 
-  protected transparent = false;
+  protected transparent = signal(false);
   protected saved = signal(false);
 
   async ngOnInit() {
     try {
-      this.transparent = await this.api.actions.getWindowTransparency();
+      this.transparent.set(await this.api.actions.getWindowTransparency());
     } catch {
       // ignore
     }
   }
 
-  async save() {
-    await this.api.actions.setWindowTransparency(this.transparent);
+  async onToggle(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.transparent.set(checked);
+    await this.api.actions.setWindowTransparency(checked);
     this.saved.set(true);
     setTimeout(() => this.saved.set(false), 2000);
   }
