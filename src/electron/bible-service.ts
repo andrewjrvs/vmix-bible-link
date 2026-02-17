@@ -94,11 +94,17 @@ interface StoredVerseGroup {
 export class BibleService {
   private store: any = null;
   private bibleData: BibleData | null = null;
-  private initialized = false;
+  private _ready: Promise<void>;
+  private _resolveReady!: () => void;
+
+  constructor() {
+    this._ready = new Promise(resolve => { this._resolveReady = resolve; });
+  }
+
+  /** Wait for initialization to complete before using the service */
+  get ready(): Promise<void> { return this._ready; }
 
   async initialize(): Promise<void> {
-    if (this.initialized) return;
-
     const Store = (await import('electron-store')).default;
     this.store = new Store({
       name: 'bible-data',
@@ -106,7 +112,7 @@ export class BibleService {
 
     // Load Bible data from store on initialization
     this.loadBibleFromStore();
-    this.initialized = true;
+    this._resolveReady();
   }
 
   private loadBibleFromStore(): void {

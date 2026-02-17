@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="140" font-family="'Segoe UI', Tahoma, sans-serif">
+  <!-- Background -->
+  <rect width="700" height="140" fill="#f0f0f0" rx="4"/>
+
+  <!-- Title -->
+  <text x="20" y="24" fill="#333" font-size="13" font-weight="bold">Status Indicator States</text>
+
+  <!-- State 1: OFF -->
+  <rect x="20" y="40" width="200" height="80" fill="#e0e0e0" stroke="#aaa" stroke-width="1" rx="4"/>
+  <rect x="80" y="52" width="80" height="28" rx="6" fill="#888"/>
+  <text x="106" y="71" fill="white" font-size="13" font-weight="bold">OFF</text>
+  <text x="120" y="102" fill="#666" font-size="11" text-anchor="middle">Input not active</text>
+  <text x="120" y="115" fill="#888" font-size="9" text-anchor="middle">on any overlay</text>
+
+  <!-- State 2: LIVE -->
+  <rect x="250" y="40" width="200" height="80" fill="#e0e0e0" stroke="#aaa" stroke-width="1" rx="4"/>
+  <rect x="310" y="52" width="80" height="28" rx="6" fill="#e53935"/>
+  <text x="332" y="71" fill="white" font-size="13" font-weight="bold">LIVE</text>
+  <text x="350" y="102" fill="#666" font-size="11" text-anchor="middle">Input is showing</text>
+  <text x="350" y="115" fill="#888" font-size="9" text-anchor="middle">on program output</text>
+
+  <!-- State 3: PRV -->
+  <rect x="480" y="40" width="200" height="80" fill="#e0e0e0" stroke="#aaa" stroke-width="1" rx="4"/>
+  <rect x="540" y="52" width="80" height="28" rx="6" fill="#43a047"/>
+  <text x="565" y="71" fill="white" font-size="13" font-weight="bold">PRV</text>
+  <text x="580" y="102" fill="#666" font-size="11" text-anchor="middle">Input is in</text>
+  <text x="580" y="115" fill="#888" font-size="9" text-anchor="middle">preview mode</text>
+</svg>

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="420" font-family="'Segoe UI', Tahoma, sans-serif">
+  <!-- Window background -->
+  <rect width="700" height="420" fill="#d9d9d9" rx="4"/>
+  <!-- Titlebar -->
+  <rect width="700" height="28" fill="#4a90e2" rx="4"/>
+  <rect y="14" width="700" height="14" fill="#4a90e2"/>
+  <text x="14" y="19" fill="white" font-size="12" font-weight="bold">VMIX Bible Link</text>
+  <circle cx="668" cy="14" r="7" fill="#e84" stroke="#c63" stroke-width="1"/>
+  <circle cx="648" cy="14" r="7" fill="#6b6" stroke="#494" stroke-width="1"/>
+  <!-- Nav bar -->
+  <rect x="0" y="28" width="700" height="32" fill="#e0e0e0" stroke="#aaa" stroke-width="1"/>
+  <!-- Nav items -->
+  <rect x="8" y="32" width="80" height="24" rx="2" fill="#ccc" stroke="#999" stroke-width="1"/>
+  <text x="28" y="48" fill="#999" font-size="10">Search</text>
+  <rect x="92" y="32" width="70" height="24" rx="2" fill="#ffd700" stroke="#cc9900" stroke-width="1"/>
+  <text x="110" y="48" fill="#333" font-size="10" font-weight="bold">Bible</text>
+  <rect x="166" y="32" width="70" height="24" rx="2" fill="#ccc" stroke="#999" stroke-width="1"/>
+  <text x="180" y="48" fill="#999" font-size="10">Verses</text>
+  <rect x="240" y="32" width="70" height="24" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <text x="258" y="48" fill="#333" font-size="10">Saved</text>
+  <rect x="314" y="32" width="80" height="24" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <text x="328" y="48" fill="#333" font-size="10">Settings</text>
+  <!-- Status indicator -->
+  <rect x="640" y="35" width="36" height="18" rx="3" fill="#888"/>
+  <text x="648" y="48" fill="white" font-size="9" font-weight="bold">OFF</text>
+  <!-- Main content area -->
+  <rect x="8" y="68" width="335" height="340" fill="#f0f0f0" stroke="#808080" stroke-width="1"/>
+  <rect x="357" y="68" width="335" height="340" fill="#f0f0f0" stroke="#808080" stroke-width="1"/>
+  <!-- OT Header -->
+  <rect x="10" y="70" width="331" height="26" fill="#4a90e2" rx="2"/>
+  <text x="22" y="88" fill="white" font-size="12" font-weight="bold">Old Testament</text>
+  <!-- NT Header -->
+  <rect x="359" y="70" width="331" height="26" fill="#4a90e2" rx="2"/>
+  <text x="371" y="88" fill="white" font-size="12" font-weight="bold">New Testament</text>
+  <!-- OT Books -->
+  <rect x="10" y="100" width="331" height="24" fill="#e8e8e8" stroke="#bbb" stroke-width="1" rx="1"/>
+  <text x="18" y="116" fill="#333" font-size="11" font-weight="600">Genesis</text>
+  <text x="240" y="116" fill="#666" font-size="9">50 chapters</text>
+  <text x="322" y="116" fill="#333" font-size="9">&#9654;</text>
+  <rect x="10" y="126" width="331" height="24" fill="#e8e8e8" stroke="#bbb" stroke-width="1" rx="1"/>
+  <text x="18" y="142" fill="#333" font-size="11" font-weight="600">Exodus</text>
+  <text x="240" y="142" fill="#666" font-size="9">40 chapters</text>
+  <text x="322" y="142" fill="#333" font-size="9">&#9654;</text>
+  <rect x="10" y="152" width="331" height="24" fill="#e8e8e8" stroke="#bbb" stroke-width="1" rx="1"/>
+  <text x="18" y="168" fill="#333" font-size="11" font-weight="600">Leviticus</text>
+  <text x="240" y="168" fill="#666" font-size="9">27 chapters</text>
+  <text x="322" y="168" fill="#333" font-size="9">&#9654;</text>
+  <rect x="10" y="178" width="331" height="24" fill="#e8e8e8" stroke="#bbb" stroke-width="1" rx="1"/>
+  <text x="18" y="194" fill="#333" font-size="11" font-weight="600">Numbers</text>
+  <text x="240" y="194" fill="#666" font-size="9">36 chapters</text>
+  <text x="322" y="194" fill="#333" font-size="9">&#9654;</text>
+  <rect x="10" y="204" width="331" height="24" fill="#e8e8e8" stroke="#bbb" stroke-width="1" rx="1"/>
+  <text x="18" y="220" fill="#333" font-size="11" font-weight="600">Deuteronomy</text>
+  <text x="240" y="220" fill="#666" font-size="9">34 chapters</text>
+  <text x="322" y="220" fill="#333" font-size="9">&#9654;</text>
+  <!-- NT Books -->
+  <rect x="359" y="100" width="331" height="24" fill="#e8e8e8" stroke="#bbb" stroke-width="1" rx="1"/>
+  <text x="367" y="116" fill="#333" font-size="11" font-weight="600">Matthew</text>
+  <text x="589" y="116" fill="#666" font-size="9">28 chapters</text>
+  <text x="671" y="116" fill="#333" font-size="9">&#9654;</text>
+  <rect x="359" y="126" width="331" height="24" fill="#e8e8e8" stroke="#bbb" stroke-width="1" rx="1"/>
+  <text x="367" y="142" fill="#333" font-size="11" font-weight="600">Mark</text>
+  <text x="589" y="142" fill="#666" font-size="9">16 chapters</text>
+  <text x="671" y="142" fill="#333" font-size="9">&#9654;</text>
+  <rect x="359" y="152" width="331" height="24" fill="#e8e8e8" stroke="#bbb" stroke-width="1" rx="1"/>
+  <text x="367" y="168" fill="#333" font-size="11" font-weight="600">Luke</text>
+  <text x="589" y="168" fill="#666" font-size="9">24 chapters</text>
+  <text x="671" y="168" fill="#333" font-size="9">&#9654;</text>
+  <rect x="359" y="178" width="331" height="24" fill="#e8e8e8" stroke="#bbb" stroke-width="1" rx="1"/>
+  <text x="367" y="194" fill="#333" font-size="11" font-weight="600">John</text>
+  <text x="589" y="194" fill="#666" font-size="9">21 chapters</text>
+  <text x="671" y="194" fill="#333" font-size="9">&#9654;</text>
+  <rect x="359" y="204" width="331" height="24" fill="#e8e8e8" stroke="#bbb" stroke-width="1" rx="1"/>
+  <text x="367" y="220" fill="#333" font-size="11" font-weight="600">Acts</text>
+  <text x="589" y="220" fill="#666" font-size="9">28 chapters</text>
+  <text x="671" y="220" fill="#333" font-size="9">&#9654;</text>
+  <!-- Annotations -->
+  <line x1="354" y1="44" x2="400" y2="44" stroke="#e44" stroke-width="2"/>
+  <text x="406" y="48" fill="#e44" font-size="10" font-weight="bold">Navigation Bar</text>
+  <line x1="658" y1="54" x2="658" y2="35" stroke="#e44" stroke-width="1" stroke-dasharray="3"/>
+  <text x="560" y="18" fill="#e44" font-size="9">Status Indicator</text>
+</svg>

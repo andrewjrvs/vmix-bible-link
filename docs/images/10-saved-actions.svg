@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="120" font-family="'Segoe UI', Tahoma, sans-serif">
+  <!-- Card snippet -->
+  <rect width="700" height="80" y="0" fill="#fff" rx="4" stroke="#ccc" stroke-width="1"/>
+
+  <text x="20" y="28" fill="#333" font-size="14" font-weight="bold">Genesis 3:1-3</text>
+  <text x="140" y="28" fill="#999" font-size="10">2/15/26</text>
+
+  <!-- Action buttons with labels -->
+  <!-- Send button -->
+  <rect x="420" y="10" width="60" height="30" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <line x1="420" y1="10" x2="480" y2="10" stroke="white" stroke-width="1"/>
+  <line x1="420" y1="10" x2="420" y2="40" stroke="white" stroke-width="1"/>
+  <line x1="480" y1="10" x2="480" y2="40" stroke="#606060" stroke-width="1"/>
+  <line x1="420" y1="40" x2="480" y2="40" stroke="#606060" stroke-width="1"/>
+  <text x="437" y="30" fill="#555" font-size="11">Send</text>
+
+  <!-- Send & Show button -->
+  <rect x="488" y="10" width="70" height="30" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <line x1="488" y1="10" x2="558" y2="10" stroke="white" stroke-width="1"/>
+  <line x1="488" y1="10" x2="488" y2="40" stroke="white" stroke-width="1"/>
+  <line x1="558" y1="10" x2="558" y2="40" stroke="#606060" stroke-width="1"/>
+  <line x1="488" y1="40" x2="558" y2="40" stroke="#606060" stroke-width="1"/>
+  <text x="498" y="30" fill="#555" font-size="10">Show</text>
+
+  <!-- Edit button -->
+  <rect x="566" y="10" width="56" height="30" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <line x1="566" y1="10" x2="622" y2="10" stroke="white" stroke-width="1"/>
+  <line x1="566" y1="10" x2="566" y2="40" stroke="white" stroke-width="1"/>
+  <line x1="622" y1="10" x2="622" y2="40" stroke="#606060" stroke-width="1"/>
+  <line x1="566" y1="40" x2="622" y2="40" stroke="#606060" stroke-width="1"/>
+  <text x="582" y="30" fill="#555" font-size="11">Edit</text>
+
+  <!-- Delete button -->
+  <rect x="630" y="10" width="56" height="30" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <line x1="630" y1="10" x2="686" y2="10" stroke="white" stroke-width="1"/>
+  <line x1="630" y1="10" x2="630" y2="40" stroke="white" stroke-width="1"/>
+  <line x1="686" y1="10" x2="686" y2="40" stroke="#606060" stroke-width="1"/>
+  <line x1="630" y1="40" x2="686" y2="40" stroke="#606060" stroke-width="1"/>
+  <text x="641" y="30" fill="#d33" font-size="11">Delete</text>
+
+  <text x="20" y="58" fill="#444" font-size="11" font-family="Georgia, serif">Now the serpent was more crafty than any beast of the field...</text>
+
+  <!-- Annotations -->
+  <line x1="450" y1="44" x2="450" y2="72" stroke="#e44" stroke-width="1" stroke-dasharray="3"/>
+  <text x="450" y="84" fill="#e44" font-size="8" font-weight="bold" text-anchor="middle">Sends text</text>
+  <text x="450" y="94" fill="#e44" font-size="8" font-weight="bold" text-anchor="middle">to vMix</text>
+
+  <line x1="523" y1="44" x2="523" y2="72" stroke="#e44" stroke-width="1" stroke-dasharray="3"/>
+  <text x="523" y="84" fill="#e44" font-size="8" font-weight="bold" text-anchor="middle">Sends +</text>
+  <text x="523" y="94" fill="#e44" font-size="8" font-weight="bold" text-anchor="middle">shows overlay</text>
+
+  <line x1="594" y1="44" x2="594" y2="72" stroke="#e44" stroke-width="1" stroke-dasharray="3"/>
+  <text x="594" y="84" fill="#e44" font-size="8" font-weight="bold" text-anchor="middle">Edit title</text>
+  <text x="594" y="94" fill="#e44" font-size="8" font-weight="bold" text-anchor="middle">or body</text>
+
+  <line x1="658" y1="44" x2="658" y2="72" stroke="#e44" stroke-width="1" stroke-dasharray="3"/>
+  <text x="658" y="84" fill="#e44" font-size="8" font-weight="bold" text-anchor="middle">Remove</text>
+  <text x="658" y="94" fill="#e44" font-size="8" font-weight="bold" text-anchor="middle">entry</text>
+</svg>

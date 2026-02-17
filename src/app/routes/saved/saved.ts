@@ -236,12 +236,16 @@ export class Saved {
 
   async ngOnInit() {
     const stored = await this.api.actions.getVerseGroups();
-    this.groups.set(stored.map(g => ({
-      ...g,
-      editing: false,
-      editTitle: g.title,
-      editBody: g.body,
-    })));
+    this.groups.set(
+      stored
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .map(g => ({
+          ...g,
+          editing: false,
+          editTitle: g.title,
+          editBody: g.body,
+        }))
+    );
   }
 
   startEdit(group: EditableVerseGroup) {

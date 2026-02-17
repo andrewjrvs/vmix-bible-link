@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="420" font-family="'Segoe UI', Tahoma, sans-serif">
+  <!-- Window background -->
+  <rect width="700" height="420" fill="#d9d9d9" rx="4"/>
+  <rect width="700" height="28" fill="#4a90e2" rx="4"/>
+  <rect y="14" width="700" height="14" fill="#4a90e2"/>
+  <text x="14" y="19" fill="white" font-size="12" font-weight="bold">VMIX Bible Link</text>
+  <circle cx="668" cy="14" r="7" fill="#e84" stroke="#c63" stroke-width="1"/>
+  <circle cx="648" cy="14" r="7" fill="#6b6" stroke="#494" stroke-width="1"/>
+
+  <!-- Nav bar -->
+  <rect x="0" y="28" width="700" height="32" fill="#e0e0e0" stroke="#aaa" stroke-width="1"/>
+  <rect x="8" y="32" width="80" height="24" rx="2" fill="#ccc" stroke="#999" stroke-width="1"/>
+  <text x="28" y="48" fill="#999" font-size="10">Search</text>
+  <rect x="92" y="32" width="70" height="24" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <text x="110" y="48" fill="#333" font-size="10">Bible</text>
+  <rect x="166" y="32" width="70" height="24" rx="2" fill="#ccc" stroke="#999" stroke-width="1"/>
+  <text x="180" y="48" fill="#999" font-size="10">Verses</text>
+  <rect x="240" y="32" width="70" height="24" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <text x="258" y="48" fill="#333" font-size="10">Saved</text>
+  <rect x="314" y="32" width="80" height="24" rx="2" fill="#ffd700" stroke="#cc9900" stroke-width="1"/>
+  <text x="328" y="48" fill="#333" font-size="10" font-weight="bold">Settings</text>
+  <rect x="640" y="35" width="36" height="18" rx="3" fill="#888"/>
+  <text x="648" y="48" fill="white" font-size="9" font-weight="bold">OFF</text>
+
+  <!-- Section header: vMix Settings -->
+  <rect x="14" y="74" width="672" height="28" fill="#4a90e2" rx="2"/>
+  <text x="26" y="93" fill="white" font-size="13" font-weight="bold">vMix Connection Settings</text>
+
+  <!-- Form fields -->
+  <!-- Host -->
+  <text x="26" y="126" fill="#555" font-size="11" font-weight="600">Host:</text>
+  <rect x="100" y="112" width="200" height="24" fill="#fff" stroke="#606060" stroke-width="1"/>
+  <text x="108" y="129" fill="#333" font-size="11">127.0.0.1</text>
+
+  <!-- Port -->
+  <text x="320" y="126" fill="#555" font-size="11" font-weight="600">Port:</text>
+  <rect x="370" y="112" width="80" height="24" fill="#fff" stroke="#606060" stroke-width="1"/>
+  <text x="378" y="129" fill="#333" font-size="11">8088</text>
+
+  <!-- Fetch Inputs button -->
+  <rect x="470" y="112" width="110" height="24" rx="2" fill="#e8e8e8"/>
+  <line x1="470" y1="112" x2="580" y2="112" stroke="white" stroke-width="1"/>
+  <line x1="470" y1="112" x2="470" y2="136" stroke="white" stroke-width="1"/>
+  <line x1="580" y1="112" x2="580" y2="136" stroke="#606060" stroke-width="1"/>
+  <line x1="470" y1="136" x2="580" y2="136" stroke="#606060" stroke-width="1"/>
+  <text x="489" y="129" fill="#333" font-size="11" font-weight="600">Fetch Inputs</text>
+
+  <!-- Input -->
+  <text x="26" y="166" fill="#555" font-size="11" font-weight="600">Input:</text>
+  <rect x="100" y="152" width="350" height="24" fill="#fff" stroke="#606060" stroke-width="1"/>
+  <text x="108" y="169" fill="#333" font-size="11">Scripture Lower Third</text>
+
+  <!-- Title Field -->
+  <text x="26" y="206" fill="#555" font-size="11" font-weight="600">Title Field:</text>
+  <rect x="100" y="192" width="350" height="24" fill="#fff" stroke="#606060" stroke-width="1"/>
+  <text x="108" y="209" fill="#333" font-size="11">Title.Text</text>
+
+  <!-- Body Field -->
+  <text x="26" y="246" fill="#555" font-size="11" font-weight="600">Body Field:</text>
+  <rect x="100" y="232" width="350" height="24" fill="#fff" stroke="#606060" stroke-width="1"/>
+  <text x="108" y="249" fill="#333" font-size="11">Body.Text</text>
+
+  <!-- Overlay -->
+  <text x="26" y="286" fill="#555" font-size="11" font-weight="600">Overlay:</text>
+  <rect x="100" y="272" width="80" height="24" fill="#fff" stroke="#606060" stroke-width="1"/>
+  <text x="108" y="289" fill="#333" font-size="11">1</text>
+
+  <!-- Save button -->
+  <rect x="100" y="310" width="100" height="28" rx="2" fill="#6bc76b"/>
+  <line x1="100" y1="310" x2="200" y2="310" stroke="#8fd98f" stroke-width="1.5"/>
+  <line x1="100" y1="310" x2="100" y2="338" stroke="#8fd98f" stroke-width="1.5"/>
+  <line x1="200" y1="310" x2="200" y2="338" stroke="#3a9a3a" stroke-width="1.5"/>
+  <line x1="100" y1="338" x2="200" y2="338" stroke="#3a9a3a" stroke-width="1.5"/>
+  <text x="130" y="329" fill="white" font-size="12" font-weight="bold">Save</text>
+
+  <!-- Annotations -->
+  <line x1="460" y1="166" x2="520" y2="166" stroke="#e44" stroke-width="1.5" stroke-dasharray="4"/>
+  <text x="524" y="170" fill="#e44" font-size="9" font-weight="bold">Select your vMix input</text>
+  <line x1="460" y1="206" x2="520" y2="206" stroke="#e44" stroke-width="1.5" stroke-dasharray="4"/>
+  <text x="524" y="210" fill="#e44" font-size="9" font-weight="bold">Text field names</text>
+  <line x1="190" y1="286" x2="240" y2="286" stroke="#e44" stroke-width="1.5" stroke-dasharray="4"/>
+  <text x="244" y="290" fill="#e44" font-size="9" font-weight="bold">Overlay channel (1-4)</text>
+</svg>

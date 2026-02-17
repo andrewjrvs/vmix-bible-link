@@ -44,6 +44,7 @@ function createWindow() {
     width: 800,
     frame: false,       // Hides the native title bar and frame
     transparent: isTransparent,  // respect user preference
+    show: false,        // don't show until content is ready
     icon: iconPath,
     webPreferences: {
       preload: preloadPath,
@@ -51,6 +52,10 @@ function createWindow() {
     }
   });
   rtnWindow.removeMenu()
+
+  rtnWindow.once('ready-to-show', () => {
+    rtnWindow.show();
+  });
 
   const route = getAppUrl()
   log(`Loading URL: ${route}`);
@@ -114,23 +119,18 @@ app.on('ready', async () => {
   log(`process.cwd=${process.cwd()}`);
   log(`process.resourcesPath=${process.resourcesPath}`);
 
+  // Start window creation immediately while services initialize in parallel
+  bibleService = new BibleService();
+  vmixService = new VmixService();
+  mainWindow = createWindow();
+
+  // Initialize services in the background
   try {
-    bibleService = new BibleService();
     await bibleService.initialize();
     log('BibleService initialized');
   } catch (err) {
     log(`BibleService failed: ${(err as Error).message}`);
   }
-
-  try {
-    vmixService = new VmixService();
-    log('VmixService initialized');
-  } catch (err) {
-    log(`VmixService failed: ${(err as Error).message}`);
-  }
-
-  mainWindow = createWindow();
-  //createUpdateWindow()
 });
 
 app.on('window-all-closed', () => {
@@ -213,11 +213,13 @@ ipcMain.handle('uploadBible', (event, bibleJson: any) => {
   }
 });
 
-ipcMain.handle('isBibleLoaded', () => {
+ipcMain.handle('isBibleLoaded', async () => {
+  await bibleService.ready;
   return bibleService.isBibleLoaded();
 });
 
-ipcMain.handle('getBooks', () => {
+ipcMain.handle('getBooks', async () => {
+  await bibleService.ready;
   return bibleService.getBooks();
 });
 

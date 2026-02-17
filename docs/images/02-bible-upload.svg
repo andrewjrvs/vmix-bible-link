@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="350" font-family="'Segoe UI', Tahoma, sans-serif">
+  <defs>
+    <linearGradient id="btnGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8e8e8"/>
+      <stop offset="100%" stop-color="#c0c0c0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Window background -->
+  <rect width="700" height="350" fill="#d9d9d9" rx="4"/>
+  <!-- Titlebar -->
+  <rect width="700" height="28" fill="#4a90e2" rx="4"/>
+  <rect y="14" width="700" height="14" fill="#4a90e2"/>
+  <text x="14" y="19" fill="white" font-size="12" font-weight="bold">VMIX Bible Link</text>
+  <circle cx="668" cy="14" r="7" fill="#e84" stroke="#c63" stroke-width="1"/>
+  <circle cx="648" cy="14" r="7" fill="#6b6" stroke="#494" stroke-width="1"/>
+
+  <!-- Nav bar -->
+  <rect x="0" y="28" width="700" height="32" fill="#e0e0e0" stroke="#aaa" stroke-width="1"/>
+  <rect x="8" y="32" width="80" height="24" rx="2" fill="#ccc" stroke="#999" stroke-width="1"/>
+  <text x="28" y="48" fill="#999" font-size="10">Search</text>
+  <rect x="92" y="32" width="70" height="24" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <text x="110" y="48" fill="#333" font-size="10">Bible</text>
+  <rect x="166" y="32" width="70" height="24" rx="2" fill="#ccc" stroke="#999" stroke-width="1"/>
+  <text x="180" y="48" fill="#999" font-size="10">Verses</text>
+  <rect x="240" y="32" width="70" height="24" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <text x="258" y="48" fill="#333" font-size="10">Saved</text>
+  <rect x="314" y="32" width="80" height="24" rx="2" fill="#ffd700" stroke="#cc9900" stroke-width="1"/>
+  <text x="328" y="48" fill="#333" font-size="10" font-weight="bold">Settings</text>
+  <rect x="640" y="35" width="36" height="18" rx="3" fill="#888"/>
+  <text x="648" y="48" fill="white" font-size="9" font-weight="bold">OFF</text>
+
+  <!-- Section header: Bible Data -->
+  <rect x="14" y="74" width="672" height="28" fill="#4a90e2" rx="2"/>
+  <text x="26" y="93" fill="white" font-size="13" font-weight="bold">Bible Data</text>
+
+  <!-- Description -->
+  <text x="26" y="126" fill="#555" font-size="11">Upload your Bible JSON data file to use with the application.</text>
+
+  <!-- File input row -->
+  <rect x="26" y="142" width="648" height="48" fill="#e8e8e8" rx="3"/>
+  <text x="38" y="171" fill="#555" font-size="12" font-weight="600">Bible File:</text>
+
+  <!-- Choose File button -->
+  <rect x="120" y="151" width="110" height="28" rx="2" fill="url(#btnGrad)"/>
+  <line x1="120" y1="151" x2="230" y2="151" stroke="white" stroke-width="1.5"/>
+  <line x1="120" y1="151" x2="120" y2="179" stroke="white" stroke-width="1.5"/>
+  <line x1="230" y1="151" x2="230" y2="179" stroke="#606060" stroke-width="1.5"/>
+  <line x1="120" y1="179" x2="230" y2="179" stroke="#606060" stroke-width="1.5"/>
+  <text x="137" y="170" fill="#333" font-size="11" font-weight="600">Choose File</text>
+
+  <text x="244" y="170" fill="#333" font-size="11">bible.json</text>
+  <text x="330" y="170" fill="#888" font-size="9">(4.2 MB)</text>
+
+  <!-- Success message -->
+  <rect x="26" y="206" width="648" height="36" fill="#e8f5e9" rx="3" stroke="#81c784" stroke-width="1"/>
+  <circle cx="46" cy="224" r="10" fill="#4caf50"/>
+  <text x="40" y="228" fill="white" font-size="12" font-weight="bold">&#10003;</text>
+  <text x="64" y="228" fill="#2e7d32" font-size="12" font-weight="bold">Bible loaded successfully!</text>
+
+  <!-- Stats row -->
+  <rect x="26" y="254" width="648" height="44" fill="#e8e8e8" rx="3"/>
+  <text x="38" y="274" fill="#555" font-size="10" font-weight="600">Books: 66</text>
+  <text x="138" y="274" fill="#555" font-size="10" font-weight="600">Chapters: 1,189</text>
+  <text x="278" y="274" fill="#555" font-size="10" font-weight="600">Verses: 31,102</text>
+  <text x="38" y="291" fill="#888" font-size="9">Translation: King James Version (KJV)</text>
+
+  <!-- Annotations -->
+  <line x1="500" y1="224" x2="580" y2="224" stroke="#e44" stroke-width="1.5" stroke-dasharray="4"/>
+  <text x="584" y="228" fill="#e44" font-size="9" font-weight="bold">Status Feedback</text>
+  <line x1="175" y1="142" x2="175" y2="128" stroke="#e44" stroke-width="1.5" stroke-dasharray="4"/>
+  <text x="130" y="124" fill="#e44" font-size="9" font-weight="bold">File Upload Control</text>
+</svg>
