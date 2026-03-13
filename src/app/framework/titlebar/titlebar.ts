@@ -36,6 +36,9 @@ import { ChangeDetectionStrategy, Component, output } from '@angular/core';
     :host {
       @include window.titlebar();
     }
+    :host-context(.no-transparency) {
+      width: 100%;
+    }
     .close-button {
         @include window.titlebar-close();
     }

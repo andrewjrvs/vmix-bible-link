@@ -1,5 +1,7 @@
 # VmixBibleLink
 
+note: icons from https://www.haiku-inc.org/trademarks/haiku_icons/
+
 ## Development
 
 ```bash

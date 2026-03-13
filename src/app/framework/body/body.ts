@@ -13,7 +13,7 @@ import { VmixState } from '../../../electron/api';
         <li class="nav-disabled"><button type="button" ><img src="icons/search.svg" /> <span>Search</span> </button></li>
         <li><button type="button" routerLinkActive="selected" [routerLinkActiveOptions]="{exact: true}" routerLink="/"><img src="icons/bookmark.svg" /> <span>Bible</span> </button></li>
         <li [class.nav-disabled]="!session.hasSelection()"><button type="button" routerLinkActive="selected" routerLink="/verses" [queryParams]="{ book: session.selectedBook(), chapter: session.selectedChapter() }"><img src="icons/blocks.svg" /> <span>Verses</span> </button></li>
-        <li><button type="button" routerLinkActive="selected" routerLink="/saved"><img src="icons/desktop.svg" /> <span>Saved</span> </button></li>
+        <li><button type="button" routerLinkActive="selected" routerLink="/saved"><img src="icons/record.svg" /> <span>Saved</span> </button></li>
         <li><button type="button" routerLinkActive="selected" routerLink="/settings"><img src="icons/edit.svg" /> <span>Settings</span> </button></li>
       </ul>
       @if (vmixState(); as state) {
