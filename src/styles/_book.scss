@@ -18,6 +18,9 @@
     width: 25px;
     transform-origin: bottom center;
     transition: transform 200ms ease, box-shadow 200ms ease;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 
     cursor: pointer;
 

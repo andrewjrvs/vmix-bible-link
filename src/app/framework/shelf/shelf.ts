@@ -18,6 +18,7 @@ import { Book } from "../book/book";
     flex-wrap: wrap;
     row-gap: 15px;
     align-items: flex-start;
+    perspective: 800px;
   }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
