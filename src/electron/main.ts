@@ -12,7 +12,6 @@ app.commandLine.appendSwitch('disable-backgrounding-occluded-windows');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 app.commandLine.appendSwitch('disable-background-timer-throttling');
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
-app.commandLine.appendSwitch('high-dpi-support', '1');
 // Force GPU rasterization even when Windows performance settings reduce GPU usage,
 // preventing Chromium from falling back to software rendering (which causes blur).
 app.commandLine.appendSwitch('ignore-gpu-blocklist');
