@@ -122,18 +122,17 @@ app.on('ready', async () => {
   log(`process.cwd=${process.cwd()}`);
   log(`process.resourcesPath=${process.resourcesPath}`);
 
-  // Start window creation immediately while services initialize in parallel
   bibleService = new BibleService();
   vmixService = new VmixService();
-  mainWindow = createWindow();
 
-  // Initialize services in the background
   try {
     await bibleService.initialize();
     log('BibleService initialized');
   } catch (err) {
     log(`BibleService failed: ${(err as Error).message}`);
   }
+
+  mainWindow = createWindow();
 });
 
 app.on('window-all-closed', () => {
